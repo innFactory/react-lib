@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "description": "",
   "keywords": [],
-  "main": "dist/react-lib.umd.js",
-  "module": "dist/react-lib.es5.js",
-  "typings": "dist/types/react-lib.d.ts",
+  "main": "dist/*",
+  "module": "dist/*",
+  "typings": "dist/types/*",
   "files": [
     "dist"
   ],
