@@ -69,7 +69,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
      * true if the floatValue has changed
      * @param newValue 
      */
-    hasChanged(newFormattedValue: number, newFloatValue: number) {
+    hasChanged(newFormattedValue: any, newFloatValue: number) {
         if (newFormattedValue[0] === ',') {
             return false;
         }

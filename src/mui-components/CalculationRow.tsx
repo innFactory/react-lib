@@ -1,6 +1,6 @@
 import { createStyles, FormControlLabel, Radio, RadioGroup, Theme, Tooltip, Typography, WithStyles, withStyles } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/InfoOutlined';
-import * as classnames from 'classnames';
+import classnames from 'classnames';
 import * as React from 'react';
 import { numberToString } from '../utils';
 import NumberField from './NumberField';
@@ -97,7 +97,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
         const { isEditing, value, currentUnit, decimalDigits } = this.state;
 
         // default backgroundColors
-        var nbColor = { notEditable: 'transparent', editable: 'lightgrey', editing: 'lightgrey' };
+        let nbColor = { notEditable: 'transparent', editable: 'lightgrey', editing: 'lightgrey' };
         if (numberBackgroundColor) {
             nbColor = numberBackgroundColor;
         }
@@ -125,7 +125,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
                 </div>
             );
         } else {
-            var bgColor = editable && !disabled ? nbColor.editable : nbColor.notEditable;
+            let bgColor = editable && !disabled ? nbColor.editable : nbColor.notEditable;
             if (errorText) {
                 bgColor = 'red';
             }

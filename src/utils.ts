@@ -12,7 +12,7 @@ export function numberToString(n: number | undefined, decimalDigits?: number) {
   if (typeof n === 'number') {
 
     decimalDigits = decimalDigits === 0 || decimalDigits ? decimalDigits : 2;
-    var parts = n.toFixed(decimalDigits).split('.');
+    let parts = n.toFixed(decimalDigits).split('.');
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     if (parts[1] && parts[1].length === 1) {
       if (decimalDigits > 1) {
