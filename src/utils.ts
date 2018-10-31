@@ -5,7 +5,6 @@
  * e.g. "10.000.000" 
  * or 1000.4 -> 1.000,40
  * 
- * @param n 
  */
 export function numberToString(n: number | undefined, decimalDigits?: number) {
 
@@ -21,7 +20,7 @@ export function numberToString(n: number | undefined, decimalDigits?: number) {
     }
 
     // trim decimalDigits if number is longer
-    if (decimalDigits > 0 && parts[1].length > decimalDigits) {
+    if (decimalDigits > 0 && parts[1] && parts[1].length > decimalDigits) {
       parts[1] = parts[1].substring(0, decimalDigits);
     }
     return parts.join(',');
