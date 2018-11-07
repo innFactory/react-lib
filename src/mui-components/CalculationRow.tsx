@@ -1,4 +1,6 @@
 import { Collapse, createStyles, FormControlLabel, Radio, RadioGroup, Theme, Tooltip, Typography, WithStyles, withStyles } from '@material-ui/core';
+import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
+import withWidth, { isWidthDown, WithWidth } from '@material-ui/core/withWidth';
 import InfoIcon from '@material-ui/icons/InfoOutlined';
 import classnames from 'classnames';
 import * as React from 'react';
@@ -6,7 +8,7 @@ import { numberToString } from '../utils';
 import NumberField from './NumberField';
 
 export namespace CalculationRow {
-    export interface Props extends WithStyles<typeof styles> {
+    export interface Props extends WithStyles<typeof styles>, WithWidth {
         value: number | undefined;
         editable?: boolean;
         label?: string;
@@ -23,7 +25,6 @@ export namespace CalculationRow {
         decimalDigits?: number;
         onFocusCapture?: Function;
         disabled?: boolean;
-        isMobile?: boolean; // render different tooltips for mobile
     }
 
     export interface State {
@@ -65,7 +66,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
     }
 
     render() {
-        const { classes, label, borderBottom, bold, editable, errorText, disabled, isMobile } = this.props;
+        const { classes, label, borderBottom, bold, editable, errorText, disabled, width } = this.props;
 
         return (
             <div className={classnames(classes.root, borderBottom && classes.borderBottom)}>
@@ -80,7 +81,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
                     {label &&
                         <div className={classes.labelContainer} onClick={this.onLabelContainerClick}>
                             <Typography
-                                variant="subheading"
+                                variant="subtitle1"
                                 className={
                                     classnames(classes.text, bold && classes.bold, disabled && classes.disabledText)}
                             >
@@ -91,14 +92,14 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
                     {this.renderNumberField()}
                 </div >
                 {this.renderUnitSwitch()}
-                {isMobile && this.renderInfoContainer()}
-                {isMobile && this.renderErrorContainer()}
+                {isMobile(width) && this.renderInfoContainer()}
+                {isMobile(width) && this.renderErrorContainer()}
             </div>
         );
     }
 
     renderNumberField() {
-        const { classes, editable, numberBackgroundColor, bold, errorText, disabled, isMobile } = this.props;
+        const { classes, editable, numberBackgroundColor, bold, errorText, disabled, width } = this.props;
         const { isEditing, value, currentUnit, decimalDigits } = this.state;
 
         // default backgroundColors
@@ -123,7 +124,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
                         style={{
                             backgroundColor: nbColor.editing,
                         }}
-                        isTooltipOpen={errorText !== null && errorText !== undefined && !isMobile}
+                        isTooltipOpen={errorText !== null && errorText !== undefined && !isMobile(width)}
                         tooltipTitle={errorText ? errorText : ''}
                     />
                 </div>
@@ -137,7 +138,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
             return (
                 <div>
                     <Typography
-                        variant="subheading"
+                        variant="subtitle1"
                         className={classnames(
                             classes.number,
                             bold && classes.bold,
@@ -175,7 +176,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
                             <FormControlLabel
                                 key={unit}
                                 value={unit}
-                                label={<Typography variant="subheading">{unit}</Typography>}
+                                label={<Typography variant="subtitle1">{unit}</Typography>}
                                 control={<Radio className={classes.radio} />}
                             />
                         );
@@ -194,17 +195,17 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
     }
 
     renderInfoIcon() {
-        const { infoText, disabled, classes, isMobile } = this.props;
+        const { infoText, disabled, classes, width } = this.props;
 
-        if (infoText && !isMobile) {
+        if (infoText && !isMobile(width)) {
             return (
                 <Tooltip
-                    title={<Typography variant="subheading" className={classes.tooltipText}>{infoText}</Typography>}
+                    title={<Typography variant="subtitle1" className={classes.tooltipText}>{infoText}</Typography>}
                 >
                     <InfoIcon color={disabled ? 'disabled' : 'inherit'} />
                 </Tooltip>
             );
-        } else if (infoText && isMobile) {
+        } else if (infoText && isMobile(width)) {
             return (
                 <InfoIcon color={disabled ? 'disabled' : 'inherit'} />
             );
@@ -243,7 +244,9 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
     }
 
     onLabelContainerClick = () => {
-        if (this.props.isMobile) {
+        const { width } = this.props;
+
+        if (isMobile(width)) {
             this.setState({ isInfoContianerOpen: !this.state.isInfoContianerOpen });
         }
     }
@@ -256,7 +259,6 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
 
         const { classes, errorText } = this.props;
         const isError = errorText !== '' && errorText !== null && errorText !== undefined;
-        console.log(isError);
 
         return (
             <Collapse in={isError} className={classes.errorContainer}>
@@ -338,10 +340,10 @@ const styles = (theme: Theme) => createStyles({
     },
 
     input: {
-        color: theme.typography.subheading.color,
-        fontSize: theme.typography.subheading.fontSize,
-        fontWeight: theme.typography.subheading.fontWeight,
-        fontFamily: theme.typography.subheading.fontFamily,
+        color: theme.typography.subtitle1.color,
+        fontSize: theme.typography.subtitle1.fontSize,
+        fontWeight: theme.typography.subtitle1.fontWeight,
+        fontFamily: theme.typography.subtitle1.fontFamily,
         textAlign: 'right',
         paddingLeft: '10px',
         width: '100%',
@@ -388,4 +390,13 @@ const styles = (theme: Theme) => createStyles({
     },
 });
 
-export default withStyles(styles)(CalculationRow);
+export default withStyles(styles)(withWidth()(CalculationRow));
+
+
+function isTablet(width: Breakpoint): boolean {
+    return isWidthDown('sm', width);
+}
+
+function isMobile(width: Breakpoint): boolean {
+    return isTablet(width);
+}

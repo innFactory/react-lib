@@ -78,32 +78,5 @@ storiesOf('CalculationRow', module)
                 />
             </Paper>
         )
-    }).add('[mobile] info tooltip', () => {
-        return withTheme(
-            <Paper style={{ margin: 20, maxWidth: 500 }}>
-                <CalculationRow
-                    value={1000}
-                    label="Eigenkapital"
-                    units={['€']}
-                    infoText="Hallo ich bin ein Eigenkapital"
-                    editable
-                    isMobile
-                />
-            </Paper>
-        )
-    }).add('[mobile] validation error', () => {
-        return withTheme(
-            <Paper style={{ margin: 20, maxWidth: 500 }}>
-                <CalculationRow
-                    value={1000}
-                    label="Eigenkapital"
-                    units={['€']}
-                    infoText="Hallo ich bin ein Eigenkapital"
-                    errorText="Du hast zu wenig Geld!"
-                    editable
-                    isMobile
-                />
-            </Paper>
-        )
     });
 

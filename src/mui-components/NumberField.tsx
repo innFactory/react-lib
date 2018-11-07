@@ -1,9 +1,11 @@
 import { createStyles, FormControl, Input, InputAdornment, Theme, Tooltip, Typography, WithStyles, withStyles } from '@material-ui/core';
+import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
+import withWidth, { isWidthDown, WithWidth } from '@material-ui/core/withWidth';
 import * as React from 'react';
 import NumberFormat from 'react-number-format';
 
 export namespace NumberField {
-    export interface Props extends WithStyles<typeof styles> {
+    export interface Props extends WithStyles<typeof styles>, WithWidth {
         value?: number | null;
         onChange: Function;
         endAdornment?: string;
@@ -152,7 +154,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
 
     render() {
 
-        const { classes, autoFocus } = this.props;
+        const { classes, autoFocus, width } = this.props;
 
         return (
             <FormControl className={this.props.className} style={this.props.style}>
@@ -170,7 +172,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
                                 this.onFinished();
                             }
                         }}
-                        type='number'
+                        type={isMobile(width) ? 'number' : undefined}
                         classes={this.inputClassesStyle()}
                         value={(this.props.value !== null) ? this.props.value : ''}
                         onChange={(e) => this.props.onChange(e)}
@@ -180,7 +182,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
                                 className={classes.endAdornment}
                                 position={'end'}
                             >
-                                <Typography variant="subheading">
+                                <Typography variant="subtitle1">
                                     {this.props.endAdornment}
                                 </Typography>
                             </InputAdornment>}
@@ -206,11 +208,11 @@ const styles = (theme: Theme) => createStyles({
         color: '#ffffff',
     },
     input: {
-        color: theme.typography.subheading.color,
-        fontSize: theme.typography.subheading.fontSize,
-        fontWeight: theme.typography.subheading.fontWeight,
-        fontFamily: theme.typography.subheading.fontFamily,
-        lineHeight: theme.typography.subheading.lineHeight,
+        color: theme.typography.subtitle1.color,
+        fontSize: theme.typography.subtitle1.fontSize,
+        fontWeight: theme.typography.subtitle1.fontWeight,
+        fontFamily: theme.typography.subtitle1.fontFamily,
+        lineHeight: theme.typography.subtitle1.lineHeight,
         textAlign: 'right',
         paddingLeft: '10px',
         width: '100%',
@@ -235,4 +237,12 @@ const styles = (theme: Theme) => createStyles({
     },
 });
 
-export default withStyles(styles)(NumberField);
+export default withStyles(styles)(withWidth()(NumberField));
+
+function isTablet(width: Breakpoint): boolean {
+    return isWidthDown('sm', width);
+}
+
+function isMobile(width: Breakpoint): boolean {
+    return isTablet(width);
+}

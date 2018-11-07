@@ -6,9 +6,15 @@ import * as React from 'react';
 
 storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
 
+const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
+});
+
 export const withTheme = (component: any) => {
   return (
-    <MuiThemeProvider theme={createMuiTheme()}>
+    <MuiThemeProvider theme={theme}>
       {/* Reboot kickstart an elegant, consistent, and simple baseline to build upon. */}
       <CssBaseline />
       {component}
