@@ -55,7 +55,7 @@ storiesOf('CalculationRow', module)
                     units={['€']}
                     borderBottom
                     editable
-                    numberBackgroundColor={{ notEditable: '#fce1bd', editable: '#c1fffa', editing: '#1ed9ff' }}
+                    numberBackgroundColor={{ notEditable: '#fce1bd', editable: '#c1fffa', editing: 'pink' }}
                 />
                 <CalculationRow
                     value={1000}

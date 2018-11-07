@@ -170,6 +170,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
                                 this.onFinished();
                             }
                         }}
+                        type='number'
                         classes={this.inputClassesStyle()}
                         value={(this.props.value !== null) ? this.props.value : ''}
                         onChange={(e) => this.props.onChange(e)}
@@ -212,7 +213,7 @@ const styles = (theme: Theme) => createStyles({
         lineHeight: theme.typography.subheading.lineHeight,
         textAlign: 'right',
         paddingLeft: '10px',
-        width: '100%'
+        width: '100%',
     },
     underline: {
         '&:hover:before': {
@@ -230,6 +231,7 @@ const styles = (theme: Theme) => createStyles({
     },
     endAdornment: {
         padding: '4px 5px 0 0',
+        marginBottom: 5
     },
 });
 

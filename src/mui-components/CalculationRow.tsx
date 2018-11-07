@@ -112,7 +112,6 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
                         endAdornment={currentUnit}
                         inputClassesStyle={{
                             input: classes.input,
-                            underline: classes.underline
                         }}
                         onFinished={() => this.onFinished()}
                         autoFocus
@@ -266,7 +265,7 @@ const styles = (theme: Theme) => createStyles({
     },
 
     number: {
-        lineHeight: theme.typography.subheading.lineHeight,
+        lineHeight: 1.3,
         textAlign: 'right',
         marginTop: 5,
         marginRight: 5,
@@ -291,24 +290,10 @@ const styles = (theme: Theme) => createStyles({
         fontSize: theme.typography.subheading.fontSize,
         fontWeight: theme.typography.subheading.fontWeight,
         fontFamily: theme.typography.subheading.fontFamily,
-        lineHeight: theme.typography.subheading.lineHeight,
         textAlign: 'right',
         paddingLeft: '10px',
         width: '100%',
-    },
-    underline: {
-        '&:hover:before': {
-            backgroundColor: '#d3d3d3' + '!important',
-            height: 0,
-        },
-        '&:before': {
-            backgroundColor: '#d3d3d3',
-            height: 0,
-        },
-        '&:after': {
-            backgroundColor: '#d3d3d3',
-            height: 2,
-        },
+        paddingBottom: 8
     },
 
     switchButton: {
