@@ -6,7 +6,7 @@
  * or 1000.4 -> 1.000,40
  * 
  */
-export function numberToString(n: number | undefined, decimalDigits?: number) {
+export function numberToString(n: number | undefined, decimalDigits?: number, undefinedValuePlaceholder?: string) {
 
   if (typeof n === 'number') {
 
@@ -25,7 +25,7 @@ export function numberToString(n: number | undefined, decimalDigits?: number) {
     }
     return parts.join(',');
   } else {
-    return '-';
+    return (undefinedValuePlaceholder || undefinedValuePlaceholder === '') ? undefinedValuePlaceholder : '-';
   }
 
 }

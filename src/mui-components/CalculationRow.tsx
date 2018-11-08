@@ -1,4 +1,4 @@
-import { Collapse, createStyles, FormControlLabel, Radio, RadioGroup, Theme, Tooltip, Typography, WithStyles, withStyles } from '@material-ui/core';
+import { ClickAwayListener, Collapse, createStyles, FormControlLabel, Radio, RadioGroup, Theme, Tooltip, Typography, WithStyles, withStyles } from '@material-ui/core';
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import withWidth, { isWidthDown, WithWidth } from '@material-ui/core/withWidth';
 import InfoIcon from '@material-ui/icons/InfoOutlined';
@@ -9,7 +9,7 @@ import NumberField from './NumberField';
 
 export namespace CalculationRow {
     export interface Props extends WithStyles<typeof styles>, WithWidth {
-        value: number | undefined;
+        value?: number;
         editable?: boolean;
         label?: string;
         units?: string[]; // e.g. ['€', '%']
@@ -25,6 +25,7 @@ export namespace CalculationRow {
         decimalDigits?: number;
         onFocusCapture?: Function;
         disabled?: boolean;
+        undefinedValuePlaceholder?: string; // default is '-'
     }
 
     export interface State {
@@ -79,7 +80,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
                     }}
                 >
                     {label &&
-                        <div className={classes.labelContainer} onClick={this.onLabelContainerClick}>
+                        <div className={classes.labelContainer}>
                             <Typography
                                 variant="subtitle1"
                                 className={
@@ -99,7 +100,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
     }
 
     renderNumberField() {
-        const { classes, editable, numberBackgroundColor, bold, errorText, disabled, width } = this.props;
+        const { classes, editable, numberBackgroundColor, bold, errorText, disabled, width, undefinedValuePlaceholder } = this.props;
         const { isEditing, value, currentUnit, decimalDigits } = this.state;
 
         // default backgroundColors
@@ -152,7 +153,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
                         }}
                         onClick={() => this.receiveFocus()}
                     >
-                        {numberToString(value, decimalDigits)} {' ' + this.state.currentUnit}
+                        {numberToString(value, decimalDigits, undefinedValuePlaceholder)} {' ' + this.state.currentUnit}
                     </Typography >
                 </div>
             );
@@ -207,7 +208,9 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
             );
         } else if (infoText && isMobile(width)) {
             return (
-                <InfoIcon color={disabled ? 'disabled' : 'inherit'} />
+                <ClickAwayListener onClickAway={this.onInfoAway}>
+                    <InfoIcon onClick={this.onInfoClick} color={disabled ? 'disabled' : 'inherit'} />
+                </ClickAwayListener>
             );
         }
 
@@ -243,12 +246,13 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
         );
     }
 
-    onLabelContainerClick = () => {
-        const { width } = this.props;
+    onInfoClick = () => {
 
-        if (isMobile(width)) {
-            this.setState({ isInfoContianerOpen: !this.state.isInfoContianerOpen });
-        }
+        this.setState({ isInfoContianerOpen: !this.state.isInfoContianerOpen });
+    }
+
+    onInfoAway = () => {
+        this.setState({ isInfoContianerOpen: false });
     }
 
 
@@ -273,6 +277,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
 const styles = (theme: Theme) => createStyles({
     root: {
         display: 'flex',
+        flex: 1,
         flexDirection: 'column',
     },
 
