@@ -1,10 +1,6 @@
 
 /**
- * Converts a number to a string 
- * Default Case are 2 decimal digits
- * e.g. "10.000.000" 
- * or 1000.4 -> 1.000,40
- * 
+ * Converts a number to a string. Default Case are 2 decimal digits e.g. 10.000.000 or 1000.4 to 1.000,40
  */
 export function numberToString(n: number | undefined, decimalDigits?: number, undefinedValuePlaceholder?: string) {
 
