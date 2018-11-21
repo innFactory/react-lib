@@ -1,4 +1,5 @@
-import { numberToString } from './utils';
+import { numberToString, parseQueryString } from './utils';
+
 
 describe('numberToString', () => {
     test('undefined', () => {
@@ -72,4 +73,12 @@ describe('numberToString', () => {
         expect(n).toBe('42,100');
     });
 });
+
+describe('parseQueryString', () => {
+    test('?filename=tryjsref_substring2', () => {
+        const s = parseQueryString('?filename=tryjsref_substring2');
+        expect(s).toEqual({ filename: 'tryjsref_substring2' });
+    });
+});
+
 

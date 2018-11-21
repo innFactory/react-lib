@@ -25,3 +25,20 @@ export function numberToString(n: number | undefined, decimalDigits?: number, un
   }
 
 }
+
+/**Object
+ * use the window.location.search to parse the url query params.
+ */
+export function parseQueryString(s: string): any {
+  var params = {}, queries, temp, i, l;
+
+  s = s.replace('?', '');
+  // Split into key/value pairs
+  queries = s.split('&');
+  // Convert the array of strings into an object
+  for (i = 0, l = queries.length; i < l; i++) {
+    temp = queries[i].split('=');
+    params[temp[0]] = temp[1];
+  }
+  return params;
+}
