@@ -16,8 +16,9 @@ class CalculationRowWithProps extends React.Component<CalculationRowWithProps.Pr
 
 
     state = {
-        value: undefined
+        value: this.props.value
     };
+
 
     render() {
 

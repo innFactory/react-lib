@@ -63,23 +63,8 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
                 : this.state.tooltipTitle,
             closeTooltip: nextProps.closeTooltip ? nextProps.closeTooltip
                 : this.state.closeTooltip,
-            value: nextProps.value ? nextProps.value : this.state.value
+            value: nextProps.value ? nextProps.value + '' : this.state.value
         });
-    }
-
-    /**
-     * false if the first character is a ',' until the field loses focus 
-     * true if the floatValue has changed
-     * @param newValue 
-     */
-    hasChanged(value: any) {
-        if (value === ',') {
-            return false;
-        }
-        if (this.props.value == value) {
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -89,7 +74,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
         if (this.state.isTooltipOpen) {
             this.state.closeTooltip();
         }
-        event.target.select();
+        setTimeout(() => event.target.select(), 20);
     }
 
     /**
@@ -144,9 +129,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
 
                         onChange={e => {
                             const value = e.target.value;
-                            if (this.hasChanged(value)) {
-                                this.setState({ value });
-                            }
+                            this.setState({ value });
                         }}
                         endAdornment={
                             <InputAdornment
