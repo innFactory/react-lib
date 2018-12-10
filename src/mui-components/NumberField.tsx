@@ -63,7 +63,8 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
             tooltipTitle: nextProps.tooltipTitle ? nextProps.tooltipTitle
                 : this.state.tooltipTitle,
             closeTooltip: nextProps.closeTooltip ? nextProps.closeTooltip
-                : this.state.closeTooltip
+                : this.state.closeTooltip,
+            value: nextProps.value ? nextProps.value : this.state.value
         });
     }
 
