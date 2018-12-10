@@ -2,7 +2,6 @@ import { createStyles, FormControl, Input, InputAdornment, Theme, Tooltip, Typog
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import withWidth, { isWidthDown, WithWidth } from '@material-ui/core/withWidth';
 import * as React from 'react';
-import NumberFormat from 'react-number-format';
 
 export namespace NumberField {
     export interface Props extends WithStyles<typeof styles>, WithWidth {
@@ -71,11 +70,11 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
      * true if the floatValue has changed
      * @param newValue 
      */
-    hasChanged(newFormattedValue: any, newFloatValue: number) {
-        if (newFormattedValue[0] === ',') {
+    hasChanged(value: any) {
+        if (value === ',') {
             return false;
         }
-        if (this.props.value === newFloatValue) {
+        if (this.props.value == value) {
             return false;
         }
         return true;
@@ -89,40 +88,6 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
             this.state.closeTooltip();
         }
         event.target.select();
-    }
-
-    /**
-     * renders a float number to a formatted number e.g. 10000.29 -> 10.000,29
-     * and calls onChange if hasChanged() becomes true
-     */
-    numberFormatCustom = (props: any) => {
-        const { inputRef, onChange, negativeValue, ...other } = props;
-        return (
-            <NumberFormat
-                {...other}
-                ref={inputRef}
-                onValueChange={(values: any) => {
-                    if (this.hasChanged(values.formattedValue, values.floatValue)) {
-                        if (isNaN(values.floatValue)) {
-                            onChange(null);
-                        } else {
-
-                            // if value is allowed to be negative
-                            if (negativeValue) {
-                                onChange(values.floatValue);
-                            } else {
-                                // make sure value is not negative
-                                onChange(Math.abs(values.floatValue));
-                            }
-
-                        }
-                    }
-                }}
-                thousandSeparator={this.state.thousandSeparator}
-                decimalSeparator={this.state.decimalSeparator}
-                isNumericString={this.state.isNumericString}
-            />
-        );
     }
 
     /**
@@ -154,7 +119,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
 
     render() {
 
-        const { classes, autoFocus, width } = this.props;
+        const { classes, autoFocus, onChange, negativeValue, width } = this.props;
 
         return (
             <FormControl className={this.props.className} style={this.props.style}>
@@ -172,11 +137,35 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
                                 this.onFinished();
                             }
                         }}
-                        type={isMobile(width) ? 'number' : undefined}
                         classes={this.inputClassesStyle()}
                         value={(this.props.value !== null) ? this.props.value : ''}
-                        onChange={(e) => this.props.onChange(e)}
-                        inputComponent={this.numberFormatCustom}
+
+                        onChange={e => {
+                            const value = e.target.value;
+                            if (this.hasChanged(value)) {
+                                try {
+                                    const num = Number.parseFloat(value);
+
+                                    if (isNaN(num)) {
+                                        onChange(null);
+                                    } else {
+
+                                        // if value is allowed to be negative
+                                        if (negativeValue) {
+                                            onChange(num);
+                                        } else {
+                                            // make sure value is not negative
+                                            onChange(Math.abs(num));
+                                        }
+
+                                    }
+
+                                } catch (e) {
+                                    onChange(null);
+                                }
+
+                            }
+                        }}
                         endAdornment={
                             <InputAdornment
                                 className={classes.endAdornment}
@@ -188,6 +177,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
                             </InputAdornment>}
                         onFocus={this.handleFocus()}
                         disableUnderline={true}
+                        type={isMobile(width) ? 'number' : 'none'}
                     />
                 </Tooltip>
             </FormControl>
@@ -217,6 +207,8 @@ const styles = (theme: Theme) => createStyles({
         paddingLeft: '10px',
         width: '100%',
     },
+
+
     underline: {
         '&:hover:before': {
             backgroundColor: '#d3d3d3' + '!important',
