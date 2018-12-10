@@ -3,13 +3,14 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import CalculationRow from '../mui-components/CalculationRow';
 import RadioCalcRows from '../mui-components/RadioCalcRows';
+import CalculationRowWithProps from './CalculationRowWithProps';
 import { withTheme } from './index.stories';
 
 storiesOf('CalculationRow', module)
     .add('enabled with €', () => {
         return withTheme(
             <Paper style={{ margin: 20, maxWidth: 500 }}>
-                <CalculationRow
+                <CalculationRowWithProps
                     editable
                     label="Eigenkapital"
                     units={['€']}

@@ -17,7 +17,7 @@ export namespace CalculationRow {
         numberBackgroundColor?: { notEditable: string, editable: string, editing: string };
         onUnitChange?: (unit: string) => void;
         infoText?: string;
-        onChange?: Function;
+        onChange?: (value: number) => void;
         bold?: boolean;
         borderBottom?: boolean;
         isEditing?: boolean;
@@ -30,7 +30,6 @@ export namespace CalculationRow {
 
     export interface State {
         isEditing: boolean;
-        value: number | undefined;
         currentUnit: string;
         decimalDigits: number;
         isInfoContianerOpen: boolean;
@@ -48,10 +47,9 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
     };
 
     componentWillMount() {
-        const { value, decimalDigits, isEditing, selectedUnit, units } = this.props;
+        const { decimalDigits, isEditing, selectedUnit, units } = this.props;
 
         this.setState({
-            value: value,
             currentUnit: selectedUnit ? selectedUnit : (units ? units[0] : ''),
             decimalDigits: (decimalDigits === undefined) ? 2 : decimalDigits,
             isEditing: isEditing ? isEditing : false
@@ -61,7 +59,6 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
     componentWillReceiveProps(nextProps: CalculationRow.Props) {
 
         this.setState({
-            value: nextProps.value,
             isEditing: nextProps.isEditing ? nextProps.isEditing : false
         });
     }
@@ -100,8 +97,8 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
     }
 
     renderNumberField() {
-        const { classes, editable, numberBackgroundColor, bold, errorText, disabled, width, undefinedValuePlaceholder } = this.props;
-        const { isEditing, value, currentUnit, decimalDigits } = this.state;
+        const { classes, editable, numberBackgroundColor, bold, errorText, disabled, width, undefinedValuePlaceholder, value } = this.props;
+        const { isEditing, currentUnit, decimalDigits } = this.state;
 
         // default backgroundColors
         let nbColor = { notEditable: 'transparent', editable: 'lightgrey', editing: 'lightgrey' };
@@ -115,12 +112,11 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
                     <NumberField
                         className={classes.numberField}
                         value={(typeof value === 'number') ? parseFloat(value.toFixed(decimalDigits)) : value}
-                        onChange={(v: number) => this.setState({ value: v })}
                         endAdornment={currentUnit}
                         inputClassesStyle={{
                             input: classes.input,
                         }}
-                        onFinished={() => this.onFinished()}
+                        onFinished={v => this.onFinished(v)}
                         autoFocus
                         style={{
                             backgroundColor: nbColor.editing,
@@ -217,9 +213,9 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
         else { return null; }
     }
 
-    onFinished() {
+    onFinished(v: number) {
         this.setState({ isEditing: false });
-        if (this.props.onChange) { this.props.onChange(this.state.value); }
+        if (this.props.onChange) { this.props.onChange(v); }
     }
 
     receiveFocus() {

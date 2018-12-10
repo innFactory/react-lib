@@ -6,7 +6,6 @@ import * as React from 'react';
 export namespace NumberField {
     export interface Props extends WithStyles<typeof styles>, WithWidth {
         value?: number | null;
-        onChange: Function;
         endAdornment?: string;
         className?: string;
         isTooltipOpen?: boolean;
@@ -18,7 +17,7 @@ export namespace NumberField {
         thousandSeparator?: string;
         decimalSeparator?: string;
         isNumericString?: boolean;
-        onFinished?: Function;
+        onFinished?: (value: number) => void;
         autoFocus?: boolean;
         style?: any;
         negativeValue?: boolean; // allow negative values (default: false)
@@ -167,43 +166,40 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
         );
     }
 
+
     onFinished() {
-        const { onFinished } = this.props;
-        if (onFinished) {
-            onFinished();
-        }
-
-        this.onChange();
-    }
-
-    onChange() {
-        const { onChange, negativeValue, decimalSeparator, thousandSeparator } = this.props;
+        const { onFinished, negativeValue, decimalSeparator, thousandSeparator } = this.props;
         let { value } = this.state;
+
+        if (!onFinished) {
+            return;
+        }
 
         try {
             value = value.replace(decimalSeparator ? decimalSeparator : ',', '.');
             value = value.replace(thousandSeparator ? thousandSeparator : ';', '.');
             const num = Number.parseFloat(value);
 
+
             if (isNaN(num)) {
-                onChange(0);
+                onFinished(0);
                 this.setState({ value: '' })
             } else {
 
                 // if value is allowed to be negative
                 if (negativeValue) {
-                    onChange(num);
+                    onFinished(num);
                     this.setState({ value: num + '' })
                 } else {
                     // make sure value is not negative
-                    onChange(Math.abs(num));
+                    onFinished(Math.abs(num));
                     this.setState({ value: Math.abs(num) + '' })
                 }
 
             }
 
         } catch (e) {
-            onChange(0);
+            onFinished(0);
             this.setState({ value: '' })
         }
 
