@@ -11,7 +11,6 @@ storiesOf('CalculationRow', module)
             <Paper style={{ margin: 20, maxWidth: 500 }}>
                 <CalculationRow
                     editable
-                    value={0}
                     label="Eigenkapital"
                     units={['€']}
                 />

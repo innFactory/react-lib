@@ -32,6 +32,7 @@ class RadioCalcRows extends React.Component<RadioCalcRows.Props, RadioCalcRows.S
                 >
                     {rows.map((c, i) =>
                         <FormControlLabel
+                            key={values ? values[i] : 'radio' + i}
                             value={values ? values[i] : 'radio' + i}
                             control={<Radio color="primary" />}
                             classes={{

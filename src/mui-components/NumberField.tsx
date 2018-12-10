@@ -31,6 +31,7 @@ export namespace NumberField {
         tooltipTitle: string;
         closeTooltip: any;
         tooltipPlacement: any;
+        value: string;
     }
 }
 
@@ -43,7 +44,8 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
         tooltipPlacement: undefined,
         isTooltipOpen: false,
         tooltipTitle: '',
-        closeTooltip: () => { return; }
+        closeTooltip: () => { return; },
+        value: '',
     };
 
     componentWillReceiveProps(nextProps: any) {
@@ -119,7 +121,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
 
     render() {
 
-        const { classes, autoFocus, onChange, negativeValue, width } = this.props;
+        const { classes, autoFocus, width } = this.props;
 
         return (
             <FormControl className={this.props.className} style={this.props.style}>
@@ -138,32 +140,12 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
                             }
                         }}
                         classes={this.inputClassesStyle()}
-                        value={(this.props.value !== null) ? this.props.value : ''}
+                        value={this.state.value ? this.state.value : ''}
 
                         onChange={e => {
                             const value = e.target.value;
                             if (this.hasChanged(value)) {
-                                try {
-                                    const num = Number.parseFloat(value);
-
-                                    if (isNaN(num)) {
-                                        onChange(null);
-                                    } else {
-
-                                        // if value is allowed to be negative
-                                        if (negativeValue) {
-                                            onChange(num);
-                                        } else {
-                                            // make sure value is not negative
-                                            onChange(Math.abs(num));
-                                        }
-
-                                    }
-
-                                } catch (e) {
-                                    onChange(null);
-                                }
-
+                                this.setState({ value });
                             }
                         }}
                         endAdornment={
@@ -177,7 +159,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
                             </InputAdornment>}
                         onFocus={this.handleFocus()}
                         disableUnderline={true}
-                        type={isMobile(width) ? 'number' : 'none'}
+                        type={isMobile(width) ? 'number' : undefined}
                     />
                 </Tooltip>
             </FormControl>
@@ -189,6 +171,41 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
         if (onFinished) {
             onFinished();
         }
+
+        this.onChange();
+    }
+
+    onChange() {
+        const { onChange, negativeValue, decimalSeparator, thousandSeparator } = this.props;
+        let { value } = this.state;
+
+        try {
+            value = value.replace(decimalSeparator ? decimalSeparator : ',', '.');
+            value = value.replace(thousandSeparator ? thousandSeparator : ';', '.');
+            const num = Number.parseFloat(value);
+
+            if (isNaN(num)) {
+                onChange(0);
+                this.setState({ value: '' })
+            } else {
+
+                // if value is allowed to be negative
+                if (negativeValue) {
+                    onChange(num);
+                    this.setState({ value: num + '' })
+                } else {
+                    // make sure value is not negative
+                    onChange(Math.abs(num));
+                    this.setState({ value: Math.abs(num) + '' })
+                }
+
+            }
+
+        } catch (e) {
+            onChange(0);
+            this.setState({ value: '' })
+        }
+
     }
 }
 
