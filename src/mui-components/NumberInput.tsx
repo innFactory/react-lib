@@ -1,14 +1,15 @@
 import { Button, createStyles, Menu, MenuItem, Theme, Typography, withStyles, WithStyles } from '@material-ui/core';
 import SelectIcon from '@material-ui/icons/KeyboardArrowDown';
 import * as classNames from 'classnames';
+import * as lodash from 'lodash';
 import * as React from 'react';
 
 export namespace NumberInput {
     export interface Props {
-        onChange?: (value: any) => void;
-        onFilled?: (value: number) => void;
-        onSelectorChange?: (index: number) => void;
-        initialValue?: any;
+        onChange?: (value: any) => void; // Called if value of input has changed
+        onFilled?: (value: number) => void; // Called if input is filled completely
+        onSelectorChange?: (index: number) => void; // Called if selector index is changed
+        initialValue?: any; // Will only be set on mount
         decimalPlaces?: number;
         length?: number;
         mobile: boolean;
@@ -79,6 +80,7 @@ class NumberInput extends React.Component<WithStyles & NumberInput.Props, Number
         }
     }
 
+    // Selecter index changed, calling this.props.selectorChange()
     onSelectorChange(index: number) {
         if (this.props.onSelectorChange) {
             this.props.onSelectorChange(index);
@@ -98,6 +100,7 @@ class NumberInput extends React.Component<WithStyles & NumberInput.Props, Number
 
     }
 
+    // Check if each char is a number
     checkEachChar = (value: string) => {
         var isValid = true;
         for (var i = 0; i < value.length; i++) {
@@ -112,6 +115,7 @@ class NumberInput extends React.Component<WithStyles & NumberInput.Props, Number
         return !isValid;
     }
 
+    // On Input Change, calling this.props.onChange and this.props.onFilled
     onChange = (event: any) => {
         const value = parseInt(event.target.value, 10);
         if (event.target.value === '') {
@@ -153,6 +157,13 @@ class NumberInput extends React.Component<WithStyles & NumberInput.Props, Number
             }
         }
 
+    }
+
+    unBlur = () => {
+        if (this.state.value.length < this.state.decimalPlaces + 1) {
+            var zeros = lodash.repeat('0', this.state.decimalPlaces + 1 - this.state.value.length);
+            this.setState({ value: zeros + '' + this.state.value });
+        }
     }
 
     renderDivider = () => {
@@ -273,7 +284,7 @@ class NumberInput extends React.Component<WithStyles & NumberInput.Props, Number
                 >
                     <input
                         onFocus={(event: any) => { event.target.select(); this.setState({ active: true }); }}
-                        onBlur={() => this.setState({ active: false })}
+                        onBlur={() => { this.unBlur(); this.setState({ active: false }); }}
                         pattern="[0-9]+([0-9]+)?"
                         style={this.state.active ?
                             this.state.error ?
@@ -341,6 +352,7 @@ const styles = (theme: Theme) => createStyles({
         borderBottomRightRadius: 0,
         borderRight: 0,
         borderColor: theme.palette.primary.main,
+        direction: 'rtl'
     },
     inputActive: {
         borderColor: theme.palette.secondary.main,
