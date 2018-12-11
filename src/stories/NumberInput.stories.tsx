@@ -9,7 +9,7 @@ storiesOf('NumberInput', module)
         return withTheme(
             <Paper style={{ margin: 20, padding: 20 }}>
                 <NumberInput
-                    initialValue={'1000000000'}
+                    initialValue={''}
                     mobile={false}
                     thousandDivider={true}
                     unitLables={[

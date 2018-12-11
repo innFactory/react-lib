@@ -2,13 +2,14 @@ import { createStyles, Theme, withStyles, WithStyles, Typography, Button, Menu, 
 import SelectIcon from '@material-ui/icons/KeyboardArrowDown';
 import * as React from 'react';
 import * as classNames from 'classnames';
+import * as lodash from 'lodash';
 
 export namespace NumberInput {
     export interface Props {
-        onChange?: (value: any) => void;
-        onFilled?: (value: number) => void;
-        onSelectorChange?: (index: number) => void;
-        initialValue?: any;
+        onChange?: (value: any) => void; // Called if value of input has changed
+        onFilled?: (value: number) => void; // Called if input is filled completely
+        onSelectorChange?: (index: number) => void; // Called if selector index is changed
+        initialValue?: any; // Will only be set on mount
         decimalPlaces?: number;
         length?: number;
         mobile: boolean;
@@ -79,6 +80,7 @@ class NumberInput extends React.Component<WithStyles & NumberInput.Props, Number
         }
     }
 
+    // Selecter index changed, calling this.props.selectorChange()
     onSelectorChange(index: number) {
         if (this.props.onSelectorChange) {
             this.props.onSelectorChange(index);
@@ -98,6 +100,7 @@ class NumberInput extends React.Component<WithStyles & NumberInput.Props, Number
 
     }
 
+    // Check if each char is a number
     checkEachChar = (value: string) => {
         var isValid = true;
         for (var i = 0; i < value.length; i++) {
@@ -112,6 +115,7 @@ class NumberInput extends React.Component<WithStyles & NumberInput.Props, Number
         return !isValid;
     }
 
+    // On Input Change, calling this.props.onChange and this.props.onFilled
     onChange = (event: any) => {
         const value = parseInt(event.target.value, 10);
         if (event.target.value === '') {
@@ -153,6 +157,13 @@ class NumberInput extends React.Component<WithStyles & NumberInput.Props, Number
             }
         }
 
+    }
+
+    unBlur = () => {
+        if (this.state.value.length < this.state.decimalPlaces + 1) {
+            var zeros = lodash.repeat('0', this.state.decimalPlaces + 1 - this.state.value.length);
+            this.setState({ value: zeros + '' + this.state.value });
+        }
     }
 
     renderDivider = () => {
@@ -273,7 +284,7 @@ class NumberInput extends React.Component<WithStyles & NumberInput.Props, Number
                 >
                     <input
                         onFocus={(event: any) => { event.target.select(); this.setState({ active: true }); }}
-                        onBlur={() => this.setState({ active: false })}
+                        onBlur={() => { this.unBlur(); this.setState({ active: false }); }}
                         pattern="[0-9]+([0-9]+)?"
                         style={this.state.active ?
                             this.state.error ?
@@ -334,12 +345,14 @@ const styles = (theme: Theme) => createStyles({
         fontFamily: 'Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace',
         letterSpacing: 6,
         outline: 0,
-        border: '1px solid #000000',
+        border: '1px solid',
         overflow: 'hidden',
         paddingLeft: 3,
         borderTopRightRadius: 0,
         borderBottomRightRadius: 0,
-        borderRight: 0
+        borderRight: 0,
+        borderColor: theme.palette.primary.main,
+        direction: 'rtl'
     },
     inputActive: {
         borderColor: theme.palette.secondary.main,
@@ -359,7 +372,7 @@ const styles = (theme: Theme) => createStyles({
     },
 
     divider: {
-        border: '1px dashed #000000',
+        border: '1px dashed',
         borderBottom: 0,
         borderLeft: 0,
         borderTop: 0,
@@ -367,7 +380,8 @@ const styles = (theme: Theme) => createStyles({
         width: 1,
         marginLeft: 18,
         marginRight: 1.5,
-        pointerEvents: 'none'
+        pointerEvents: 'none',
+        borderColor: theme.palette.primary.main,
     },
     dividerActive: {
         borderColor: theme.palette.secondary.main,
@@ -453,7 +467,7 @@ const styles = (theme: Theme) => createStyles({
         borderBottomLeftRadius: 0,
         border: '1px solid',
         position: 'relative',
-        background: '#828282',
+        background: theme.palette.primary.light,
         left: -5,
         transition: 'border-color 0s',
         '&:hover': {
