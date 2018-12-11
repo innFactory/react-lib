@@ -1,7 +1,7 @@
-import { createStyles, Theme, withStyles, WithStyles, Typography, Button, Menu, MenuItem } from '@material-ui/core';
+import { Button, createStyles, Menu, MenuItem, Theme, Typography, withStyles, WithStyles } from '@material-ui/core';
 import SelectIcon from '@material-ui/icons/KeyboardArrowDown';
-import * as React from 'react';
 import * as classNames from 'classnames';
+import * as React from 'react';
 
 export namespace NumberInput {
     export interface Props {
@@ -334,12 +334,13 @@ const styles = (theme: Theme) => createStyles({
         fontFamily: 'Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace',
         letterSpacing: 6,
         outline: 0,
-        border: '1px solid #000000',
+        border: '1px solid',
         overflow: 'hidden',
         paddingLeft: 3,
         borderTopRightRadius: 0,
         borderBottomRightRadius: 0,
-        borderRight: 0
+        borderRight: 0,
+        borderColor: theme.palette.primary.main,
     },
     inputActive: {
         borderColor: theme.palette.secondary.main,
@@ -359,7 +360,7 @@ const styles = (theme: Theme) => createStyles({
     },
 
     divider: {
-        border: '1px dashed #000000',
+        border: '1px dashed',
         borderBottom: 0,
         borderLeft: 0,
         borderTop: 0,
@@ -367,7 +368,8 @@ const styles = (theme: Theme) => createStyles({
         width: 1,
         marginLeft: 18,
         marginRight: 1.5,
-        pointerEvents: 'none'
+        pointerEvents: 'none',
+        borderColor: theme.palette.primary.main,
     },
     dividerActive: {
         borderColor: theme.palette.secondary.main,
@@ -453,7 +455,7 @@ const styles = (theme: Theme) => createStyles({
         borderBottomLeftRadius: 0,
         border: '1px solid',
         position: 'relative',
-        background: '#828282',
+        background: theme.palette.primary.light,
         left: -5,
         transition: 'border-color 0s',
         '&:hover': {
