@@ -159,7 +159,7 @@ class NumberInput extends React.Component<WithStyles & NumberInput.Props, Number
 
     }
 
-    unBlur = () => {
+    onBlur = () => {
         if (this.state.value.length < this.state.decimalPlaces + 1) {
             var zeros = lodash.repeat('0', this.state.decimalPlaces + 1 - this.state.value.length);
             this.setState({ value: zeros + '' + this.state.value });
@@ -284,7 +284,7 @@ class NumberInput extends React.Component<WithStyles & NumberInput.Props, Number
                 >
                     <input
                         onFocus={(event: any) => { event.target.select(); this.setState({ active: true }); }}
-                        onBlur={() => { this.unBlur(); this.setState({ active: false }); }}
+                        onBlur={() => { this.onBlur(); this.setState({ active: false }); }}
                         pattern="[0-9]+([0-9]+)?"
                         style={this.state.active ?
                             this.state.error ?
