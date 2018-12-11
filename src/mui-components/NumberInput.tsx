@@ -46,6 +46,7 @@ class NumberInput extends React.Component<WithStyles & NumberInput.Props, Number
     };
 
     componentWillMount() {
+        window.addEventListener('keydown', this.onKeyDown)
         if (this.props.initialValue) {
             this.setState({ value: this.props.initialValue });
         }
@@ -77,6 +78,17 @@ class NumberInput extends React.Component<WithStyles & NumberInput.Props, Number
         }
         if (nextProps.length) {
             this.setState({ length: nextProps.length });
+        }
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('keydown', this.onKeyDown)
+    }
+
+    onKeyDown = (event: any) => {
+        if (event.keyCode == 13 && this.refs !== undefined) {
+            // @ts-ignore
+            this.refs.blur()
         }
     }
 
@@ -286,6 +298,7 @@ class NumberInput extends React.Component<WithStyles & NumberInput.Props, Number
                         onFocus={(event: any) => { event.target.select(); this.setState({ active: true }); }}
                         onBlur={() => { this.unBlur(); this.setState({ active: false }); }}
                         pattern="[0-9]+([0-9]+)?"
+                        ref={(ref: any) => this.refs = ref}
                         style={this.state.active ?
                             this.state.error ?
                                 {
