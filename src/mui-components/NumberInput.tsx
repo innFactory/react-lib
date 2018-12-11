@@ -1,8 +1,8 @@
-import { createStyles, Theme, withStyles, WithStyles, Typography, Button, Menu, MenuItem } from '@material-ui/core';
+import { Button, createStyles, Menu, MenuItem, Theme, Typography, withStyles, WithStyles } from '@material-ui/core';
 import SelectIcon from '@material-ui/icons/KeyboardArrowDown';
-import * as React from 'react';
 import * as classNames from 'classnames';
 import * as lodash from 'lodash';
+import * as React from 'react';
 
 export namespace NumberInput {
     export interface Props {
