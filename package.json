@@ -24,6 +24,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@material-ui/lab": "3.0.0-alpha.28",
     "classnames": ">= 2.2.6"
   },
   "peerDependencies": {

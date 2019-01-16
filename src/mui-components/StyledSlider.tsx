@@ -1,7 +1,7 @@
 import { createStyles, Theme, WithStyles, withStyles, Popper } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
-import MUISlider from '../slider/Slider/Slider';
+import MUISlider from '@material-ui/lab/Slider/Slider';
 
 export namespace StyledSlider {
     export interface Props extends WithStyles<typeof styles> {
