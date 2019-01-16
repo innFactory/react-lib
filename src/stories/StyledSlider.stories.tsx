@@ -1,7 +1,7 @@
 import { Paper } from '@material-ui/core';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import Slider from '../slider/StyledSlider';
+import Slider from '../mui-components/StyledSlider';
 import { withTheme } from './index.stories';
 
 storiesOf('StyledSlider', module)
