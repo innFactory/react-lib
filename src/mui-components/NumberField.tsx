@@ -124,9 +124,13 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
                                 this.onFinished();
                             }
                         }}
+                        onKeyDown={(ev) => {
+                            if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
+                                this.onFinished();
+                            }
+                        }}
                         classes={this.inputClassesStyle()}
                         value={this.state.value ? this.state.value : ''}
-
                         onChange={e => {
                             const value = e.target.value;
                             this.setState({ value });
