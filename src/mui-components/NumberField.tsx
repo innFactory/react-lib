@@ -182,6 +182,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
             }
 
         } catch (e) {
+            console.log(e);
             onFinished(0);
             this.setState({ value: '' })
         }
