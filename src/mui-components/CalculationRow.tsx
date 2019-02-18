@@ -135,6 +135,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
             return (
                 <div>
                     <Typography
+                        data-cy="calculationRowValue"
                         variant="subtitle1"
                         className={classnames(
                             classes.number,
