@@ -174,7 +174,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
                                 key={unit}
                                 value={unit}
                                 label={<Typography variant="subtitle1">{unit}</Typography>}
-                                control={<Radio className={classes.radio} />}
+                                control={<Radio data-cy={'unitSwitch' + unit} className={classes.radio} />}
                             />
                         );
                     })}
