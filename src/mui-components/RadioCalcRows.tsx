@@ -34,7 +34,7 @@ class RadioCalcRows extends React.Component<RadioCalcRows.Props, RadioCalcRows.S
                         <FormControlLabel
                             key={values ? values[i] : 'radio' + i}
                             value={values ? values[i] : 'radio' + i}
-                            control={<Radio color="primary" />}
+                            control={<Radio data-cy="radioButton" color="primary" />}
                             classes={{
                                 label: classes.label,
                                 root: classes.labelRoot
