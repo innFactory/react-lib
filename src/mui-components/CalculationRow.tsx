@@ -135,6 +135,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
             return (
                 <div>
                     <Typography
+                        data-cy="calculationRowValue"
                         variant="subtitle1"
                         className={classnames(
                             classes.number,
@@ -174,7 +175,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
                                 key={unit}
                                 value={unit}
                                 label={<Typography variant="subtitle1">{unit}</Typography>}
-                                control={<Radio className={classes.radio} />}
+                                control={<Radio data-cy={'unitSwitch' + unit} className={classes.radio} />}
                             />
                         );
                     })}

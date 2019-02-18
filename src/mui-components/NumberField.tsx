@@ -117,6 +117,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
                     placement={this.state.tooltipPlacement}
                 >
                     <Input
+                        data-cy="numberField"
                         autoFocus={autoFocus}
                         onBlur={() => this.onFinished()}
                         onKeyPress={(ev) => {
