@@ -147,7 +147,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
                             </InputAdornment>}
                         onFocus={this.handleFocus()}
                         disableUnderline={true}
-                        type={isMobile(width) ? 'number' : undefined}
+                        type={isMobile(width) ? 'number' : 'text'}
                     />
                 </Tooltip>
             </FormControl>
