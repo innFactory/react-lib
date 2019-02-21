@@ -24,6 +24,10 @@ class MovingBackgroundImage extends React.Component<MovingBackgroundImage.Props,
 
     // Preload images at the earliest possible lifecycle event
     componentWillMount() {
+        if (this.props.initialPicture) {
+            const img = document.createElement('img');
+            img.src = this.props.initialPicture; // Assigning the img src immediately requests the image
+        }
         this.props.images.forEach((src: string) => {
             const img = document.createElement('img');
             img.src = src; // Assigning the img src immediately requests the image
