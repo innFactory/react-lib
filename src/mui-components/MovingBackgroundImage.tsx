@@ -4,11 +4,13 @@ import * as React from 'react';
 export namespace MovingBackgroundImage {
     export interface Props extends WithStyles<typeof styles> {
         images: string[]
+        initialPicture?: string;
     }
 
     export interface State {
         imageIndex: number;
         animationClassSwitch: boolean;
+        mounted: boolean;
     }
 }
 
@@ -17,6 +19,7 @@ class MovingBackgroundImage extends React.Component<MovingBackgroundImage.Props,
     state = {
         imageIndex: 0,
         animationClassSwitch: false,
+        mounted: false
     };
 
     // Preload images at the earliest possible lifecycle event
@@ -34,7 +37,12 @@ class MovingBackgroundImage extends React.Component<MovingBackgroundImage.Props,
             newIndex = this.state.imageIndex + 1;
         }
         let b = !this.state.animationClassSwitch;
-        setTimeout(() => this.setState({ imageIndex: newIndex, animationClassSwitch: b }), 6900);
+
+        if (!this.state.mounted && this.props.initialPicture) {
+            setTimeout(() => this.setState({ mounted: true }), 6900)
+        } else {
+            setTimeout(() => this.setState({ imageIndex: newIndex, animationClassSwitch: b }), 6900);
+        }
     }
 
     componentDidUpdate() {
@@ -49,25 +57,44 @@ class MovingBackgroundImage extends React.Component<MovingBackgroundImage.Props,
     }
 
     render() {
-        const { classes, children, images } = this.props;
-        const { imageIndex, animationClassSwitch } = this.state;
+        const { classes, children, images, initialPicture } = this.props;
+        const { imageIndex, animationClassSwitch, mounted } = this.state;
 
         const animation = animationClassSwitch ? 1 : 2;
 
-        return (
-            <div className={classes.wrapper}>
-                <div
-                    key={'mimageContainer' + imageIndex}
-                    className={classes.background}
-                    style={{ animation: 'bg-slide' + animation + ' 7s ease-out' }}
-                >
-                    <img key={'mimage' + imageIndex} src={images[imageIndex]} className={classes.image} />
+        // Is first low quality picture loaded?
+        if (!mounted && initialPicture) {
+            return (
+                <div className={classes.wrapper}>
+                    <div
+                        key={'initialimageContainer'}
+                        className={classes.background}
+                        style={{ animation: 'bg-slide' + animation + ' 7s ease-out' }}
+                    >
+                        <img key={'initialimage'} src={initialPicture} className={classes.image} />
+                    </div>
+                    <div className={classes.content}>
+                        {children}
+                    </div>
                 </div>
-                <div className={classes.content}>
-                    {children}
+            );
+        } else {
+            return (
+                <div className={classes.wrapper}>
+                    <div
+                        key={'mimageContainer' + imageIndex}
+                        className={classes.background}
+                        style={{ animation: 'bg-slide' + animation + ' 7s ease-out' }}
+                    >
+                        <img key={'mimage' + imageIndex} src={images[imageIndex]} className={classes.image} />
+                    </div>
+                    <div className={classes.content}>
+                        {children}
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        }
+
     }
 }
 
