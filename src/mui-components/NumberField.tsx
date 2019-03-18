@@ -1,6 +1,7 @@
 import { createStyles, FormControl, Input, InputAdornment, Theme, Tooltip, Typography, WithStyles, withStyles } from '@material-ui/core';
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import withWidth, { isWidthDown, WithWidth } from '@material-ui/core/withWidth';
+import Cleave from 'cleave.js/react';
 import * as React from 'react';
 
 export namespace NumberField {
@@ -48,6 +49,14 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
     };
 
     componentWillReceiveProps(nextProps: any) {
+
+        let value = nextProps.value ? nextProps.value + '' : this.state.value;
+
+        const { decimalSeparator } = nextProps;
+        console.log(value);
+        value = value.replace('.', decimalSeparator ? decimalSeparator : ',');
+        console.log(value);
+
         this.setState({
             thousandSeparator: nextProps.thousandSeparator ? nextProps.thousandSeparator
                 : this.state.thousandSeparator,
@@ -63,7 +72,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
                 : this.state.tooltipTitle,
             closeTooltip: nextProps.closeTooltip ? nextProps.closeTooltip
                 : this.state.closeTooltip,
-            value: nextProps.value ? nextProps.value + '' : this.state.value
+            value
         });
     }
 
@@ -148,11 +157,28 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
                         onFocus={this.handleFocus()}
                         disableUnderline={true}
                         type={isMobile(width) ? 'number' : 'text'}
+                        inputComponent={this.maskedTextField}
                     />
                 </Tooltip>
             </FormControl>
         );
     }
+
+    maskedTextField = (props: any) => {
+        const { decimalSeparator, thousandSeparator } = this.props;
+        let { options, inputRef, ...other } = props;
+        return (
+            <Cleave
+                {...other}
+                ref={(ref: any) => { inputRef = ref }}
+                options={{
+                    numeral: true,
+                    numeralDecimalMark: decimalSeparator ? decimalSeparator : ',',
+                    delimiter: thousandSeparator ? thousandSeparator : '.'
+                }}
+            />);
+    }
+
 
 
     onFinished() {
@@ -164,8 +190,9 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
         }
 
         try {
+            value = value.replace(thousandSeparator ? thousandSeparator : '.', '');
+            value = value.replace(thousandSeparator ? thousandSeparator : '.', '');
             value = value.replace(decimalSeparator ? decimalSeparator : ',', '.');
-            value = value.replace(thousandSeparator ? thousandSeparator : ';', '.');
             const num = Number.parseFloat(value);
 
 
@@ -187,7 +214,6 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
             }
 
         } catch (e) {
-            console.log(e);
             onFinished(0);
             this.setState({ value: '' })
         }
