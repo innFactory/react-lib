@@ -22,6 +22,7 @@ export namespace NumberField {
         autoFocus?: boolean;
         style?: any;
         negativeValue?: boolean; // allow negative values (default: false)
+        onKeyPress?: (key: string) => void;
     }
     export interface State {
         thousandSeparator: string;
@@ -53,9 +54,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
         let value = nextProps.value ? nextProps.value + '' : this.state.value;
 
         const { decimalSeparator } = nextProps;
-        console.log(value);
         value = value.replace('.', decimalSeparator ? decimalSeparator : ',');
-        console.log(value);
 
         this.setState({
             thousandSeparator: nextProps.thousandSeparator ? nextProps.thousandSeparator
@@ -129,11 +128,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
                         data-cy="numberField"
                         autoFocus={autoFocus}
                         onBlur={() => this.onFinished()}
-                        onKeyPress={(ev) => {
-                            if (ev.key === 'Enter') {
-                                this.onFinished();
-                            }
-                        }}
+                        onKeyPress={this.onKeyPress}
                         onKeyDown={(ev) => {
                             if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
                                 this.onFinished();
@@ -180,6 +175,17 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
     }
 
 
+    onKeyPress = (ev: React.KeyboardEvent<HTMLDivElement>) => {
+        const { onKeyPress } = this.props;
+
+        if (onKeyPress) {
+            onKeyPress(ev.key);
+        }
+
+        if (ev.key === 'Enter') {
+            this.onFinished();
+        }
+    }
 
     onFinished() {
         const { onFinished, negativeValue, decimalSeparator, thousandSeparator } = this.props;

@@ -18,6 +18,7 @@ export namespace CalculationRow {
         onUnitChange?: (unit: string) => void;
         infoText?: string;
         onChange?: (value: number) => void;
+        onKeyPress?: (key: string) => void;
         bold?: boolean;
         borderBottom?: boolean;
         isEditing?: boolean;
@@ -97,7 +98,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
     }
 
     renderNumberField() {
-        const { classes, editable, numberBackgroundColor, bold, errorText, disabled, width, undefinedValuePlaceholder, value } = this.props;
+        const { classes, editable, numberBackgroundColor, bold, errorText, disabled, width, undefinedValuePlaceholder, value, onKeyPress } = this.props;
         const { isEditing, currentUnit, decimalDigits } = this.state;
 
         // default backgroundColors
@@ -123,6 +124,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
                         }}
                         isTooltipOpen={errorText !== null && errorText !== undefined && !isMobile(width)}
                         tooltipTitle={errorText ? errorText : ''}
+                        onKeyPress={onKeyPress}
                     />
                 </div>
             );
