@@ -19,10 +19,10 @@ export namespace NumberField {
         decimalSeparator?: string;
         isNumericString?: boolean;
         onFinished?: (value: number) => void;
+        onChange?: (value: number) => void;
         autoFocus?: boolean;
         style?: any;
         negativeValue?: boolean; // allow negative values (default: false)
-        onKeyPress?: (key: string) => void;
     }
     export interface State {
         thousandSeparator: string;
@@ -136,10 +136,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
                         }}
                         classes={this.inputClassesStyle()}
                         value={this.state.value ? this.state.value : ''}
-                        onChange={e => {
-                            const value = e.target.value;
-                            this.setState({ value });
-                        }}
+                        onChange={this.onChange}
                         endAdornment={
                             <InputAdornment
                                 className={classes.endAdornment}
@@ -176,24 +173,42 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
 
 
     onKeyPress = (ev: React.KeyboardEvent<HTMLDivElement>) => {
-        const { onKeyPress } = this.props;
-
-        if (onKeyPress) {
-            onKeyPress(ev.key);
-        }
-
         if (ev.key === 'Enter') {
             this.onFinished();
         }
     }
 
+    onChange = (ev: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        const { onChange } = this.props;
+        const value = ev.target.value;
+        
+        if (onChange) {
+            const numValue = this.stringValueToNum(value);
+            onChange(numValue !== undefined ? numValue : 0);
+        }
+        this.setState({ value });
+    }
+
     onFinished() {
-        const { onFinished, negativeValue, decimalSeparator, thousandSeparator } = this.props;
+        const { onFinished } = this.props;
         let { value } = this.state;
 
         if (!onFinished) {
             return;
         }
+        const numValue = this.stringValueToNum(value);
+
+        if (numValue !== undefined) {
+            onFinished(numValue);
+            this.setState({value: numValue + ''});
+        } else {
+            onFinished(0);
+            this.setState({value: ''});
+        }
+    }
+
+    stringValueToNum(value: string): number | undefined {
+        const { negativeValue, decimalSeparator, thousandSeparator } = this.props;
 
         try {
             value = value.replace(thousandSeparator ? thousandSeparator : '.', '');
@@ -203,27 +218,19 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
 
 
             if (isNaN(num)) {
-                onFinished(0);
-                this.setState({ value: '' })
+                return;
             } else {
-
                 // if value is allowed to be negative
                 if (negativeValue) {
-                    onFinished(num);
-                    this.setState({ value: num + '' })
+                    return num;
                 } else {
                     // make sure value is not negative
-                    onFinished(Math.abs(num));
-                    this.setState({ value: Math.abs(num) + '' })
+                    return Math.abs(num);
                 }
-
             }
-
         } catch (e) {
-            onFinished(0);
-            this.setState({ value: '' })
+            return;
         }
-
     }
 }
 
