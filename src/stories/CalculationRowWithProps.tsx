@@ -26,13 +26,18 @@ class CalculationRowWithProps extends React.Component<CalculationRowWithProps.Pr
             <CalculationRow
                 {...this.props}
                 value={this.state.value}
+                onFinished={this.onFinished}
                 onChange={this.onChange}
             />
         );
     }
 
     onChange = (value: number) => {
-        console.log(value);
+        console.log('Changed:', value);
+    }
+
+    onFinished = (value: number) => {
+        console.log('Finished:', value);
         this.setState({ value });
     }
 }
