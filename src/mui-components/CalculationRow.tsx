@@ -18,7 +18,7 @@ export namespace CalculationRow {
         onUnitChange?: (unit: string) => void;
         infoText?: string;
         onChange?: (value: number) => void;
-        onKeyPress?: (key: string) => void;
+        onFinished?: (value: number) => void;
         bold?: boolean;
         borderBottom?: boolean;
         isEditing?: boolean;
@@ -98,7 +98,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
     }
 
     renderNumberField() {
-        const { classes, editable, numberBackgroundColor, bold, errorText, disabled, width, undefinedValuePlaceholder, value, onKeyPress } = this.props;
+        const { classes, onChange, editable, numberBackgroundColor, bold, errorText, disabled, width, undefinedValuePlaceholder, value } = this.props;
         const { isEditing, currentUnit, decimalDigits } = this.state;
 
         // default backgroundColors
@@ -118,13 +118,13 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
                             input: classes.input,
                         }}
                         onFinished={v => this.onFinished(v)}
+                        onChange={onChange}
                         autoFocus
                         style={{
                             backgroundColor: nbColor.editing,
                         }}
                         isTooltipOpen={errorText !== null && errorText !== undefined && !isMobile(width)}
                         tooltipTitle={errorText ? errorText : ''}
-                        onKeyPress={onKeyPress}
                     />
                 </div>
             );
@@ -218,7 +218,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
 
     onFinished(v: number) {
         this.setState({ isEditing: false });
-        if (this.props.onChange) { this.props.onChange(v); }
+        if (this.props.onFinished) { this.props.onFinished(v); }
     }
 
     receiveFocus() {
