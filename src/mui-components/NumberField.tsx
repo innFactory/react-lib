@@ -1,6 +1,5 @@
 import { createStyles, FormControl, Input, InputAdornment, Theme, Tooltip, Typography, WithStyles, withStyles } from '@material-ui/core';
-import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
-import withWidth, { isWidthDown, WithWidth } from '@material-ui/core/withWidth';
+import withWidth, { WithWidth } from '@material-ui/core/withWidth';
 import Cleave from 'cleave.js/react';
 import * as React from 'react';
 
@@ -114,7 +113,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
 
     render() {
 
-        const { classes, autoFocus, width } = this.props;
+        const { classes, autoFocus } = this.props;
 
         return (
             <FormControl className={this.props.className} style={this.props.style}>
@@ -148,8 +147,9 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
                             </InputAdornment>}
                         onFocus={this.handleFocus()}
                         disableUnderline={true}
-                        type={isMobile(width) ? 'number' : 'text'}
+                        type={'text'}
                         inputComponent={this.maskedTextField}
+                        inputProps={{inputmode: 'decimal', }}
                     />
                 </Tooltip>
             </FormControl>
@@ -272,11 +272,3 @@ const styles = (theme: Theme) => createStyles({
 });
 
 export default withStyles(styles)(withWidth()(NumberField));
-
-function isTablet(width: Breakpoint): boolean {
-    return isWidthDown('sm', width);
-}
-
-function isMobile(width: Breakpoint): boolean {
-    return isTablet(width);
-}
