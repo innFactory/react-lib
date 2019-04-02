@@ -149,7 +149,7 @@ class NumberField extends React.Component<NumberField.Props, NumberField.State> 
                         disableUnderline={true}
                         type={'text'}
                         inputComponent={this.maskedTextField}
-                        inputProps={{inputode: 'decimal', }}
+                        inputProps={{inputmode: 'decimal', }}
                     />
                 </Tooltip>
             </FormControl>
