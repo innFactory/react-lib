@@ -1,5 +1,4 @@
 import { createStyles, Theme, Typography, WithStyles, withStyles } from '@material-ui/core';
-import * as _ from 'lodash';
 import * as React from 'react';
 
 export namespace LPTexts {
@@ -25,10 +24,10 @@ class LPTexts extends React.Component<LPTexts.Props> {
             topMargin = true;
         }
         if ((isLast && endMargin) || !isLast) {
-            _.assign(style, { marginBottom: 20 });
+            style = Object.assign(style, { marginBottom: 20 });
         }
         if (topMargin && isFirst) {
-            _.assign(style, { marginTop: 20 });
+            style = Object.assign(style, { marginTop: 20 });
         }
         return (
             <Typography
