@@ -108,6 +108,9 @@ const styles = (theme: Theme) => createStyles({
         margin: 0,
         paddingTop: 10,
         paddingBottom: 10
+    },
+    root: {
+        background: theme.palette.common.white
     }
 });
 

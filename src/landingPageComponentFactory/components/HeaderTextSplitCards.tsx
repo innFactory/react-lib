@@ -61,7 +61,10 @@ const styles = (theme: Theme) => createStyles({
         marginTop: 20,
         display: 'flex',
         flexDirection: 'row',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+    },
+    root: {
+        background: theme.palette.common.white
     }
 });
 

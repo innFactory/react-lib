@@ -29,6 +29,9 @@ class LPHeader extends React.Component<LPHeader.Props> {
 const styles = (theme: Theme) => createStyles({
     header: {
         marginBottom: 20
+    },
+    root: {
+        background: theme.palette.common.white
     }
 });
 

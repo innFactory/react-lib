@@ -61,6 +61,9 @@ const styles = (theme: Theme) => createStyles({
         minWidth: '100%',
         display: 'flex',
         flexDirection: 'column'
+    },
+    out: {
+        background: theme.palette.common.white
     }
 });
 
