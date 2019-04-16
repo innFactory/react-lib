@@ -25,7 +25,8 @@
   },
   "dependencies": {
     "classnames": ">= 2.2.6",
-    "cleave.js": "^1.4.10"
+    "cleave.js": "^1.4.10",
+    "lodash": "^4.17.11"
   },
   "peerDependencies": {
     "react": "^16.0.0",
