@@ -12,7 +12,7 @@ export namespace LPTexts {
 
 class LPTexts extends React.Component<LPTexts.Props> {
 
-    renderText = (value: string, index: number, length: number) => {
+    renderText(value: string, index: number, length: number) {
         let endMargin = true;
         let isLast = index === length - 1;
         let isFirst = index === 0;
@@ -48,7 +48,7 @@ class LPTexts extends React.Component<LPTexts.Props> {
             <div className={this.props.classes.root}>
                 {this.props.texts && this.props.texts.length > 0 &&
                     this.props.texts.map((text: string, index: number) => {
-                        this.renderText(text, index, this.props.texts.length);
+                        return this.renderText(text, index, this.props.texts.length);
                     })}
             </div>
         );
