@@ -24,6 +24,9 @@ class PictureAndText extends React.Component<PictureAndText.Props, PictureAndTex
 }
 
 const styles = (theme: Theme) => createStyles({
+    root: {
+        background: theme.palette.common.white
+    }
 });
 
 export default withStyles(styles)(PictureAndText);

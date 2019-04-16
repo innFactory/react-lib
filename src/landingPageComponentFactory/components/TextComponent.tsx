@@ -29,6 +29,9 @@ class TextComponent extends React.Component<TextComponent.Props, TextComponent.S
 }
 
 const styles = (theme: Theme) => createStyles({
+    root: {
+        background: theme.palette.common.white
+    }
 });
 
 export default withStyles(styles)(TextComponent);

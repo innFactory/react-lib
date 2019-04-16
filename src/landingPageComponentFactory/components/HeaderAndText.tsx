@@ -34,6 +34,9 @@ class HeaderAndText extends React.Component<HeaderAndText.Props, HeaderAndText.S
 }
 
 const styles = (theme: Theme) => createStyles({
+    root: {
+        background: theme.palette.common.white
+    }
 });
 
 export default withStyles(styles)(HeaderAndText);

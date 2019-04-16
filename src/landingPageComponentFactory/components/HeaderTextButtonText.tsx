@@ -48,6 +48,9 @@ class HeaderTextButtonText extends React.Component<HeaderTextButtonText.Props, H
 }
 
 const styles = (theme: any) => createStyles({
+    root: {
+        background: theme.palette.common.white
+    }
 });
 
 export default withStyles(styles)(HeaderTextButtonText);

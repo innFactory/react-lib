@@ -75,6 +75,9 @@ const styles = (theme: Theme) => createStyles({
         flexGrow: 2
     },
     typography: {
+    },
+    out: {
+        background: theme.palette.common.white
     }
 });
 

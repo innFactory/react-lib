@@ -37,6 +37,9 @@ const styles = (theme: Theme) => createStyles({
         borderRadius: '50%',
         justifyContent: 'center',
         backgroundColor: 'white'
+    },
+    root: {
+        background: theme.palette.common.white
     }
 });
 

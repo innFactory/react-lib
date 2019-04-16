@@ -40,6 +40,9 @@ const styles = (theme: Theme) => createStyles({
         marginTop: 20,
         marginBottom: 20,
         display: 'block'
+    },
+    root: {
+        background: theme.palette.common.white
     }
 });
 
