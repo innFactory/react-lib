@@ -48,7 +48,7 @@ class LPTexts extends React.Component<LPTexts.Props> {
             <div className={this.props.classes.root}>
                 {this.props.texts && this.props.texts.length > 0 &&
                     this.props.texts.map((text: string, index: number) => {
-                        return this.renderText(text, index, this.props.texts.length);
+                        this.renderText(text, index, this.props.texts.length);
                     })}
             </div>
         );
