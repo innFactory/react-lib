@@ -27,6 +27,7 @@ export interface LandingPageAvatarCard {
     text: string;
     backgroundColor: string;
     src: string;
+    avatarColor: string;
     textColor: string;
     textVariant: TypographyProps['variant'];
 }

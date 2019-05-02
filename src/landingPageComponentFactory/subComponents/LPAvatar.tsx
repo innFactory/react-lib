@@ -4,6 +4,7 @@ import * as React from 'react';
 export namespace LPAvatar {
     export interface Props extends WithStyles<typeof styles> {
         src: string;
+        color: string;
     }
 }
 
@@ -11,7 +12,7 @@ class LPAvatar extends React.Component<LPAvatar.Props> {
 
     render() {
         return (
-            <div className={this.props.classes.circle}>
+            <div className={this.props.classes.circle} style={{ borderColor: this.props.color }}>
                 <img className={this.props.classes.image} src={this.props.src} />
             </div>
         );

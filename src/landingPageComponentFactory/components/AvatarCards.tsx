@@ -22,6 +22,7 @@ class AvatarCards extends React.Component<AvatarCards.Props, AvatarCards.State> 
     renderAvatarCards = (card: LandingPageAvatarCard, index: number) => {
         return (
             <LPAvatarCardWithText
+                avatarColor={card.avatarColor}
                 isMobile={this.props.isMobile}
                 index={index}
                 textVariant={card.textVariant}

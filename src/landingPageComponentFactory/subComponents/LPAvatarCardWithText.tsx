@@ -11,6 +11,7 @@ export namespace LPAvatarCardWithText {
         textColor: string;
         textVariant: TypographyProps['variant'];
         backgroundColor: string;
+        avatarColor: string;
         avatarCardsLength: number;
         index: number;
         isMobile: boolean;
@@ -46,7 +47,7 @@ class LPAvatarCardWithText extends React.Component<LPAvatarCardWithText.Props> {
                 style={mobile ? mobileStyle : style}
                 className={this.props.classes.root}
             >
-                <LPAvatar src={this.props.src} />
+                <LPAvatar src={this.props.src} color={this.props.avatarColor} />
                 <Typography
                     variant={this.props.textVariant}
                     gutterBottom
