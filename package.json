@@ -1,6 +1,6 @@
 {
   "name": "react-lib",
-  "version": "1.0.0",
+  "version": "0.0.37",
   "description": "",
   "author": "spoeck",
   "license": "",
@@ -39,7 +39,7 @@
     "@commitlint/config-conventional": "7.3.1",
     "@material-ui/core": "3.9.0",
     "@material-ui/icons": "3.0.2",
-    "@material-ui/lab": "3.0.0-alpha.28",
+    "@material-ui/lab": "3.0.0-alpha.30",
     "@storybook/addon-actions": "4.1.7",
     "@storybook/addon-info": "4.1.7",
     "@storybook/addon-links": "4.1.7",
