@@ -29,7 +29,10 @@ class ComponentFactory extends React.Component<
       case "TextComponent": {
         return (
           <TextComponent
-            key={hashCode(JSON.stringify(landingPageValue))}
+            key={
+              "TextComponent_" +
+              hashCode(JSON.stringify(landingPageValue.values.texts))
+            }
             texts={landingPageValue.values.texts}
           />
         );
@@ -37,7 +40,9 @@ class ComponentFactory extends React.Component<
       case "HeaderTextButton": {
         return (
           <HeaderTextButton
-            key={hashCode(JSON.stringify(landingPageValue))}
+            key={
+              "HeaderTextButton_" + hashCode(JSON.stringify(landingPageValue))
+            }
             appHistory={this.props.appHistory}
             texts={landingPageValue.values.texts}
             header={landingPageValue.values.header}
@@ -49,7 +54,9 @@ class ComponentFactory extends React.Component<
       case "HeaderTextButtonText": {
         return (
           <HeaderTextButtonText
-            key={hashCode(JSON.stringify(landingPageValue))}
+            key={hashCode(
+              "HeaderTextButtonText_" + JSON.stringify(landingPageValue)
+            )}
             appHistory={this.props.appHistory}
             texts={landingPageValue.values.texts}
             header={landingPageValue.values.header}
@@ -62,7 +69,10 @@ class ComponentFactory extends React.Component<
       case "HeaderTextSplitCards": {
         return (
           <HeaderTextSplitCards
-            key={hashCode(JSON.stringify(landingPageValue))}
+            key={
+              "HeaderTextSplitCards_" +
+              hashCode(JSON.stringify(landingPageValue))
+            }
             isMobile={this.props.isMobile}
             texts={landingPageValue.values.texts}
             header={landingPageValue.values.header}
@@ -74,7 +84,10 @@ class ComponentFactory extends React.Component<
       case "HeaderAndText": {
         return (
           <HeaderAndText
-            key={hashCode(JSON.stringify(landingPageValue))}
+            key={
+              "HeaderAndText_" +
+              hashCode(JSON.stringify(landingPageValue.values.header))
+            }
             texts={landingPageValue.values.texts}
             header={landingPageValue.values.header}
           />
@@ -83,7 +96,10 @@ class ComponentFactory extends React.Component<
       case "AvatarCards": {
         return (
           <AvatarCards
-            key={hashCode(JSON.stringify(landingPageValue))}
+            key={hashCode(
+              "AvatarCards_" +
+                JSON.stringify(landingPageValue.values.avatarCards)
+            )}
             isMobile={this.props.isMobile}
             avatarCards={landingPageValue.values.avatarCards}
           />
