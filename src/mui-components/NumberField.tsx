@@ -104,8 +104,9 @@ class NumberField extends React.Component<
       this.state.closeTooltip();
     }
 
-    // assign event to local variable
+    // assign event to local variable and call event persist
     // https://stackoverflow.com/questions/49500255/warning-this-synthetic-event-is-reused-for-performance-reasons-happening-with
+    event.persist();
     const { target } = event;
 
     setTimeout(() => target.select(), 20);
