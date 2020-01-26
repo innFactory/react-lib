@@ -1,16 +1,18 @@
-import { createMuiTheme, CssBaseline, MuiThemeProvider } from '@material-ui/core';
-import { linkTo } from '@storybook/addon-links';
-import { storiesOf } from '@storybook/react';
-import { Welcome } from '@storybook/react/demo';
-import * as React from 'react';
+import {
+  createMuiTheme,
+  CssBaseline,
+  MuiThemeProvider
+} from "@material-ui/core";
+import { linkTo } from "@storybook/addon-links";
+import { storiesOf } from "@storybook/react";
+import { Welcome } from "@storybook/react/demo";
+import * as React from "react";
 
-storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
+storiesOf("Welcome", module).add("to Storybook", () => (
+  <Welcome showApp={linkTo("Button")} />
+));
 
-const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true,
-  },
-});
+const theme = createMuiTheme();
 
 export const withTheme = (component: any) => {
   return (
@@ -20,4 +22,4 @@ export const withTheme = (component: any) => {
       {component}
     </MuiThemeProvider>
   );
-}
+};

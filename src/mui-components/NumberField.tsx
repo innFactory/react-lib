@@ -62,7 +62,7 @@ class NumberField extends React.Component<
     value: ""
   };
 
-  componentWillReceiveProps(nextProps: any) {
+  UNSAFE_componentWillReceiveProps(nextProps: any) {
     let value = nextProps.value ? nextProps.value + "" : this.state.value;
 
     const { decimalSeparator } = nextProps;

@@ -25,7 +25,7 @@ class MovingBackgroundImage extends React.Component<
   };
 
   // Preload images at the earliest possible lifecycle event
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (this.props.initialPicture) {
       const img = document.createElement("img");
       img.src = this.props.initialPicture; // Assigning the img src immediately requests the image
@@ -36,7 +36,7 @@ class MovingBackgroundImage extends React.Component<
     });
   }
 
-  componentDidMount() {
+  UNSAFE_componentDidMount() {
     let newIndex = 0;
 
     if (this.state.imageIndex + 1 < this.props.images.length) {
