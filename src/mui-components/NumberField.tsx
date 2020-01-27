@@ -108,6 +108,7 @@ class NumberField extends React.Component<
     // https://stackoverflow.com/questions/49500255/warning-this-synthetic-event-is-reused-for-performance-reasons-happening-with
     event.persist();
     const { target } = event;
+    target.select();
 
     setTimeout(() => target.select(), 20);
   };
@@ -169,7 +170,7 @@ class NumberField extends React.Component<
                 </Typography>
               </InputAdornment>
             }
-            onFocus={this.handleFocus()}
+            onFocusCapture={this.handleFocus()}
             disableUnderline={true}
             type={"text"}
             inputComponent={this.maskedTextField}

@@ -47,7 +47,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
         isInfoContianerOpen: false,
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const { decimalDigits, isEditing, selectedUnit, units } = this.props;
 
         this.setState({
@@ -57,7 +57,7 @@ class CalculationRow extends React.Component<CalculationRow.Props, CalculationRo
         });
     }
 
-    componentWillReceiveProps(nextProps: CalculationRow.Props) {
+    UNSAFE_componentWillReceiveProps(nextProps: CalculationRow.Props) {
 
         this.setState({
             isEditing: nextProps.isEditing ? nextProps.isEditing : false
