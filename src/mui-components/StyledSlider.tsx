@@ -45,7 +45,7 @@ class StyledSlider extends React.Component<
     arrowRef: undefined
   };
 
-  UNSAFE_componentWillMount() {
+  componentWillMount() {
     this.setState({ number: this.getOr(this.props.defaultValue, 0) });
   }
 

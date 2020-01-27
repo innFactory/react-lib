@@ -1,4 +1,5 @@
 import { createStyles, withStyles, WithStyles } from "@material-ui/core";
+import classnames from "classnames";
 import * as React from "react";
 
 export namespace MovingBackgroundImage {
@@ -25,7 +26,7 @@ class MovingBackgroundImage extends React.Component<
   };
 
   // Preload images at the earliest possible lifecycle event
-  UNSAFE_componentWillMount() {
+  componentWillMount() {
     if (this.props.initialPicture) {
       const img = document.createElement("img");
       img.src = this.props.initialPicture; // Assigning the img src immediately requests the image
@@ -36,7 +37,7 @@ class MovingBackgroundImage extends React.Component<
     });
   }
 
-  UNSAFE_componentDidMount() {
+  componentDidMount() {
     let newIndex = 0;
 
     if (this.state.imageIndex + 1 < this.props.images.length) {
@@ -80,8 +81,10 @@ class MovingBackgroundImage extends React.Component<
         <div className={classes.wrapper}>
           <div
             key={"initialimageContainer"}
-            className={classes.background}
-            style={{ animation: "bg-slide" + animation + " 7s ease-out" }}
+            className={classnames(
+              classes.background,
+              animation === 1 ? classes.animation1 : classes.animation2
+            )}
           >
             <img
               key={"initialimage"}
@@ -98,8 +101,10 @@ class MovingBackgroundImage extends React.Component<
         <div className={classes.wrapper}>
           <div
             key={"mimageContainer" + imageIndex}
-            className={classes.background}
-            style={{ animation: "bg-slide" + animation + " 7s ease-out" }}
+            className={classnames(
+              classes.background,
+              animation === 1 ? classes.animation1 : classes.animation2
+            )}
           >
             <img
               key={"mimage" + imageIndex}
@@ -132,6 +137,14 @@ const styles = () =>
       top: 0,
       bottom: 0,
       left: 0
+    },
+
+    animation1: {
+      animation: "$bg-slide1 7s ease-out"
+    },
+
+    animation2: {
+      animation: "$bg-slide2 7s ease-out"
     },
 
     content: {
