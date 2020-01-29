@@ -1,13 +1,8 @@
-import {
-  createStyles,
-  Popper,
-  Theme,
-  WithStyles,
-  withStyles
-} from "@material-ui/core";
-import MUISlider from "@material-ui/core/Slider";
-import Typography from "@material-ui/core/Typography";
-import * as React from "react";
+import { createStyles, Popper, Theme, WithStyles, withStyles } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import * as React from 'react';
+
+import MUISlider from './slider_base/SliderBase';
 
 export namespace StyledSlider {
   export interface Props extends WithStyles<typeof styles> {
@@ -116,14 +111,15 @@ class StyledSlider extends React.Component<
         <MUISlider
           classes={{
             root: classes.slider,
-            rail: this.getTrackAfterClass(),
-            track: this.getTrackBeforeClass()
+            track: classes.track,
+            trackAfter: this.getTrackAfterClass(),
+            trackBefore: this.getTrackBeforeClass()
           }}
           value={this.state.number}
           onChange={this.handleChange}
           max={this.props.max}
           min={this.props.min}
-          ThumbComponent={() => (
+          thumb={
             <div
               onTouchMove={this.handleAnchor}
               onTouchStart={this.handleAnchor}
@@ -168,7 +164,7 @@ class StyledSlider extends React.Component<
                 </Typography>
               }
             </div>
-          )}
+          }
         />
         <Popper
           open={this.state.anchorEl !== undefined}
