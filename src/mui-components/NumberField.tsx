@@ -1,4 +1,5 @@
 import {
+  ClickAwayListener,
   createStyles,
   FormControl,
   Input,
@@ -150,32 +151,37 @@ class NumberField extends React.Component<
           open={this.state.isTooltipOpen}
           placement={this.state.tooltipPlacement}
         >
-          <Input
-            data-cy="numberField"
-            autoFocus={autoFocus}
-            onBlur={() => this.onFinished()}
-            onKeyPress={this.onKeyPress}
-            onKeyDown={ev => {
-              if (ev.key === "ArrowDown" || ev.key === "ArrowUp") {
-                this.onFinished();
+          <ClickAwayListener onClickAway={this.onFinished}>
+            <Input
+              data-cy="numberField"
+              autoFocus={autoFocus}
+              onBlur={() => this.onFinished()}
+              onKeyPress={this.onKeyPress}
+              onKeyDown={ev => {
+                if (ev.key === "ArrowDown" || ev.key === "ArrowUp") {
+                  this.onFinished();
+                }
+              }}
+              classes={this.inputClassesStyle()}
+              value={this.state.value ? this.state.value : ""}
+              onChange={this.onChange}
+              endAdornment={
+                <InputAdornment
+                  className={classes.endAdornment}
+                  position={"end"}
+                >
+                  <Typography variant="subtitle1">
+                    {this.props.endAdornment}
+                  </Typography>
+                </InputAdornment>
               }
-            }}
-            classes={this.inputClassesStyle()}
-            value={this.state.value ? this.state.value : ""}
-            onChange={this.onChange}
-            endAdornment={
-              <InputAdornment className={classes.endAdornment} position={"end"}>
-                <Typography variant="subtitle1">
-                  {this.props.endAdornment}
-                </Typography>
-              </InputAdornment>
-            }
-            onFocusCapture={this.handleFocus()}
-            disableUnderline={true}
-            type={"text"}
-            inputComponent={this.maskedTextField}
-            inputProps={{ inputmode: "decimal" }}
-          />
+              onFocusCapture={this.handleFocus()}
+              disableUnderline={true}
+              type={"text"}
+              inputComponent={this.maskedTextField}
+              inputProps={{ inputmode: "decimal" }}
+            />
+          </ClickAwayListener>
         </Tooltip>
       </FormControl>
     );
