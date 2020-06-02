@@ -8,11 +8,11 @@ import {
   Tooltip,
   Typography,
   WithStyles,
-  withStyles
-} from "@material-ui/core";
-import withWidth, { WithWidth } from "@material-ui/core/withWidth";
-import Cleave from "cleave.js/react";
-import * as React from "react";
+  withStyles,
+} from '@material-ui/core';
+import withWidth, { WithWidth } from '@material-ui/core/withWidth';
+import Cleave from 'cleave.js/react';
+import * as React from 'react';
 
 export namespace NumberField {
   export interface Props extends WithStyles<typeof styles>, WithWidth {
@@ -51,23 +51,23 @@ class NumberField extends React.Component<
   NumberField.State
 > {
   state = {
-    thousandSeparator: ".",
-    decimalSeparator: ",",
+    thousandSeparator: '.',
+    decimalSeparator: ',',
     isNumericString: true,
     tooltipPlacement: undefined,
     isTooltipOpen: false,
-    tooltipTitle: "",
+    tooltipTitle: '',
     closeTooltip: () => {
       return;
     },
-    value: ""
+    value: '',
   };
 
   componentWillReceiveProps(nextProps: any) {
-    let value = nextProps.value ? nextProps.value + "" : this.state.value;
+    let value = nextProps.value ? nextProps.value + '' : this.state.value;
 
     const { decimalSeparator } = nextProps;
-    value = value.replace(".", decimalSeparator ? decimalSeparator : ",");
+    value = value.replace('.', decimalSeparator ? decimalSeparator : ',');
 
     this.setState({
       thousandSeparator: nextProps.thousandSeparator
@@ -82,7 +82,7 @@ class NumberField extends React.Component<
           : this.state.isNumericString,
       tooltipPlacement: nextProps.tooltipPlacement
         ? nextProps.tooltipPlacement
-        : "left",
+        : 'left',
       isTooltipOpen:
         nextProps.isTooltipOpen !== undefined
           ? nextProps.isTooltipOpen
@@ -93,7 +93,7 @@ class NumberField extends React.Component<
       closeTooltip: nextProps.closeTooltip
         ? nextProps.closeTooltip
         : this.state.closeTooltip,
-      value
+      value,
     });
   }
 
@@ -144,46 +144,48 @@ class NumberField extends React.Component<
     const { classes, autoFocus } = this.props;
 
     return (
-      <FormControl className={this.props.className} style={this.props.style}>
-        <Tooltip
-          classes={this.tooltipClassesStyle()}
-          title={this.state.tooltipTitle}
-          open={this.state.isTooltipOpen}
-          placement={this.state.tooltipPlacement}
-        >
-          <ClickAwayListener onClickAway={this.onFinished}>
-            <Input
-              data-cy="numberField"
-              autoFocus={autoFocus}
-              onBlur={() => this.onFinished()}
-              onKeyPress={this.onKeyPress}
-              onKeyDown={ev => {
-                if (ev.key === "ArrowDown" || ev.key === "ArrowUp") {
-                  this.onFinished();
+      <div>
+        <FormControl className={this.props.className} style={this.props.style}>
+          <Tooltip
+            classes={this.tooltipClassesStyle()}
+            title={this.state.tooltipTitle}
+            open={this.state.isTooltipOpen}
+            placement={this.state.tooltipPlacement}
+          >
+            <ClickAwayListener onClickAway={this.onFinished}>
+              <Input
+                data-cy='numberField'
+                autoFocus={autoFocus}
+                onBlur={() => this.onFinished()}
+                onKeyPress={this.onKeyPress}
+                onKeyDown={(ev) => {
+                  if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
+                    this.onFinished();
+                  }
+                }}
+                classes={this.inputClassesStyle()}
+                value={this.state.value ? this.state.value : ''}
+                onChange={this.onChange}
+                endAdornment={
+                  <InputAdornment
+                    className={classes.endAdornment}
+                    position={'end'}
+                  >
+                    <Typography variant='subtitle1'>
+                      {this.props.endAdornment}
+                    </Typography>
+                  </InputAdornment>
                 }
-              }}
-              classes={this.inputClassesStyle()}
-              value={this.state.value ? this.state.value : ""}
-              onChange={this.onChange}
-              endAdornment={
-                <InputAdornment
-                  className={classes.endAdornment}
-                  position={"end"}
-                >
-                  <Typography variant="subtitle1">
-                    {this.props.endAdornment}
-                  </Typography>
-                </InputAdornment>
-              }
-              onFocusCapture={this.handleFocus()}
-              disableUnderline={true}
-              type={"text"}
-              inputComponent={this.maskedTextField}
-              inputProps={{ inputmode: "decimal" }}
-            />
-          </ClickAwayListener>
-        </Tooltip>
-      </FormControl>
+                onFocusCapture={this.handleFocus()}
+                disableUnderline={true}
+                type={'text'}
+                inputComponent={this.maskedTextField}
+                inputProps={{ inputmode: 'decimal' }}
+              />
+            </ClickAwayListener>
+          </Tooltip>
+        </FormControl>
+      </div>
     );
   }
 
@@ -198,15 +200,15 @@ class NumberField extends React.Component<
         }}
         options={{
           numeral: true,
-          numeralDecimalMark: decimalSeparator ? decimalSeparator : ",",
-          delimiter: thousandSeparator ? thousandSeparator : "."
+          numeralDecimalMark: decimalSeparator ? decimalSeparator : ',',
+          delimiter: thousandSeparator ? thousandSeparator : '.',
         }}
       />
     );
   };
 
   onKeyPress = (ev: React.KeyboardEvent<HTMLDivElement>) => {
-    if (ev.key === "Enter") {
+    if (ev.key === 'Enter') {
       this.onFinished();
     }
   };
@@ -235,10 +237,10 @@ class NumberField extends React.Component<
 
     if (numValue !== undefined) {
       onFinished(numValue);
-      this.setState({ value: numValue + "" });
+      this.setState({ value: numValue + '' });
     } else {
       onFinished(0);
-      this.setState({ value: "" });
+      this.setState({ value: '' });
     }
   }
 
@@ -246,9 +248,9 @@ class NumberField extends React.Component<
     const { negativeValue, decimalSeparator, thousandSeparator } = this.props;
 
     try {
-      value = value.replace(thousandSeparator ? thousandSeparator : ".", "");
-      value = value.replace(thousandSeparator ? thousandSeparator : ".", "");
-      value = value.replace(decimalSeparator ? decimalSeparator : ",", ".");
+      value = value.replace(thousandSeparator ? thousandSeparator : '.', '');
+      value = value.replace(thousandSeparator ? thousandSeparator : '.', '');
+      value = value.replace(decimalSeparator ? decimalSeparator : ',', '.');
       const num = Number.parseFloat(value);
 
       if (isNaN(num)) {
@@ -271,8 +273,8 @@ class NumberField extends React.Component<
 const styles = (theme: Theme) =>
   createStyles({
     tooltip: {
-      backgroundColor: "#FF0000",
-      color: "#ffffff"
+      backgroundColor: '#FF0000',
+      color: '#ffffff',
     },
     input: {
       color: theme.typography.subtitle1.color,
@@ -280,29 +282,29 @@ const styles = (theme: Theme) =>
       fontWeight: theme.typography.subtitle1.fontWeight,
       fontFamily: theme.typography.subtitle1.fontFamily,
       lineHeight: theme.typography.subtitle1.lineHeight,
-      textAlign: "right",
-      paddingLeft: "10px",
-      width: "100%"
+      textAlign: 'right',
+      paddingLeft: '10px',
+      width: '100%',
     },
 
     underline: {
-      "&:hover:before": {
-        backgroundColor: "#d3d3d3" + "!important",
-        height: 2
+      '&:hover:before': {
+        backgroundColor: '#d3d3d3' + '!important',
+        height: 2,
       },
-      "&:before": {
-        backgroundColor: "#d3d3d3",
-        height: 2
+      '&:before': {
+        backgroundColor: '#d3d3d3',
+        height: 2,
       },
-      "&:after": {
-        backgroundColor: "#d3d3d3",
-        height: 2
-      }
+      '&:after': {
+        backgroundColor: '#d3d3d3',
+        height: 2,
+      },
     },
     endAdornment: {
-      padding: "4px 5px 0 0",
-      marginBottom: 5
-    }
+      padding: '4px 5px 0 0',
+      marginBottom: 5,
+    },
   });
 
 export default withStyles(styles)(withWidth()(NumberField));

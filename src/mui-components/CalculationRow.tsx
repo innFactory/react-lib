@@ -9,15 +9,15 @@ import {
   Tooltip,
   Typography,
   WithStyles,
-  withStyles
-} from "@material-ui/core";
-import { Breakpoint } from "@material-ui/core/styles/createBreakpoints";
-import withWidth, { isWidthDown, WithWidth } from "@material-ui/core/withWidth";
-import InfoIcon from "@material-ui/icons/InfoOutlined";
-import classnames from "classnames";
-import * as React from "react";
-import { numberToString } from "../utils";
-import NumberField from "./NumberField";
+  withStyles,
+} from '@material-ui/core';
+import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
+import withWidth, { isWidthDown, WithWidth } from '@material-ui/core/withWidth';
+import InfoIcon from '@material-ui/icons/InfoOutlined';
+import classnames from 'classnames';
+import * as React from 'react';
+import { numberToString } from '../utils';
+import NumberField from './NumberField';
 
 export namespace CalculationRow {
   export interface Props extends WithStyles<typeof styles>, WithWidth {
@@ -60,24 +60,24 @@ class CalculationRow extends React.Component<
   state = {
     isEditing: false,
     value: 0,
-    currentUnit: "€",
+    currentUnit: '€',
     decimalDigits: 2,
-    isInfoContianerOpen: false
+    isInfoContianerOpen: false,
   };
 
   componentWillMount() {
     const { decimalDigits, isEditing, selectedUnit, units } = this.props;
 
     this.setState({
-      currentUnit: selectedUnit ? selectedUnit : units ? units[0] : "",
+      currentUnit: selectedUnit ? selectedUnit : units ? units[0] : '',
       decimalDigits: decimalDigits === undefined ? 2 : decimalDigits,
-      isEditing: isEditing ? isEditing : false
+      isEditing: isEditing ? isEditing : false,
     });
   }
 
   componentWillReceiveProps(nextProps: CalculationRow.Props) {
     this.setState({
-      isEditing: nextProps.isEditing ? nextProps.isEditing : false
+      isEditing: nextProps.isEditing ? nextProps.isEditing : false,
     });
   }
 
@@ -90,7 +90,7 @@ class CalculationRow extends React.Component<
       editable,
       errorText,
       disabled,
-      width
+      width,
     } = this.props;
 
     return (
@@ -105,13 +105,13 @@ class CalculationRow extends React.Component<
           onFocusCapture={() => this.receiveFocus()}
           tabIndex={editable && !disabled ? 0 : -1}
           style={{
-            backgroundColor: errorText ? "#FFF0F0" : "white"
+            backgroundColor: errorText ? '#FFF0F0' : 'white',
           }}
         >
           {label && (
             <div className={classes.labelContainer}>
               <Typography
-                variant="subtitle1"
+                variant='subtitle1'
                 className={classnames(
                   classes.text,
                   bold && classes.bold,
@@ -143,15 +143,15 @@ class CalculationRow extends React.Component<
       disabled,
       width,
       undefinedValuePlaceholder,
-      value
+      value,
     } = this.props;
     const { isEditing, currentUnit, decimalDigits } = this.state;
 
     // default backgroundColors
     let nbColor = {
-      notEditable: "transparent",
-      editable: "lightgrey",
-      editing: "lightgrey"
+      notEditable: 'transparent',
+      editable: 'lightgrey',
+      editing: 'lightgrey',
     };
     if (numberBackgroundColor) {
       nbColor = numberBackgroundColor;
@@ -163,24 +163,24 @@ class CalculationRow extends React.Component<
           <NumberField
             className={classes.numberField}
             value={
-              typeof value === "number"
+              typeof value === 'number'
                 ? parseFloat(value.toFixed(decimalDigits))
                 : value
             }
             endAdornment={currentUnit}
             inputClassesStyle={{
-              input: classes.input
+              input: classes.input,
             }}
-            onFinished={v => this.onFinished(v)}
+            onFinished={(v) => this.onFinished(v)}
             onChange={onChange}
             autoFocus
             style={{
-              backgroundColor: nbColor.editing
+              backgroundColor: nbColor.editing,
             }}
             isTooltipOpen={
               errorText !== null && errorText !== undefined && !isMobile(width)
             }
-            tooltipTitle={errorText ? errorText : ""}
+            tooltipTitle={errorText ? errorText : ''}
           />
         </div>
       );
@@ -188,14 +188,14 @@ class CalculationRow extends React.Component<
       let bgColor =
         editable && !disabled ? nbColor.editable : nbColor.notEditable;
       if (errorText) {
-        bgColor = "red";
+        bgColor = 'red';
       }
 
       return (
         <div>
           <Typography
-            data-cy="calculationRowValue"
-            variant="subtitle1"
+            data-cy='calculationRowValue'
+            variant='subtitle1'
             className={classnames(
               classes.number,
               bold && classes.bold,
@@ -203,14 +203,14 @@ class CalculationRow extends React.Component<
               disabled && classes.disabledText
             )}
             style={{
-              cursor: editable && !disabled ? "pointer" : "default",
+              cursor: editable && !disabled ? 'pointer' : 'default',
               backgroundColor: bgColor,
-              width: editable && !disabled ? "150px" : ""
+              width: editable && !disabled ? '150px' : '',
             }}
             onClick={() => this.receiveFocus()}
           >
-            {numberToString(value, decimalDigits, undefinedValuePlaceholder)}{" "}
-            {" " + this.state.currentUnit}
+            {numberToString(value, decimalDigits, undefinedValuePlaceholder)}{' '}
+            {' ' + this.state.currentUnit}
           </Typography>
         </div>
       );
@@ -228,15 +228,15 @@ class CalculationRow extends React.Component<
           value={sUnit}
           onChange={this.onModeChange()}
         >
-          {units.map(unit => {
+          {units.map((unit) => {
             return (
               <FormControlLabel
                 key={unit}
                 value={unit}
-                label={<Typography variant="subtitle1">{unit}</Typography>}
+                label={<Typography variant='subtitle1'>{unit}</Typography>}
                 control={
                   <Radio
-                    data-cy={"unitSwitch" + unit}
+                    data-cy={'unitSwitch' + unit}
                     className={classes.radio}
                   />
                 }
@@ -267,12 +267,12 @@ class CalculationRow extends React.Component<
       return (
         <Tooltip
           title={
-            <Typography variant="subtitle1" className={classes.tooltipText}>
+            <Typography variant='subtitle1' className={classes.tooltipText}>
               {infoText}
             </Typography>
           }
         >
-          <InfoIcon color={disabled ? "disabled" : "inherit"} />
+          <InfoIcon color={disabled ? 'disabled' : 'inherit'} />
         </Tooltip>
       );
     } else if (infoText && isMobile(width)) {
@@ -280,7 +280,7 @@ class CalculationRow extends React.Component<
         <ClickAwayListener onClickAway={this.onInfoAway}>
           <InfoIcon
             onClick={this.onInfoClick}
-            color={disabled ? "disabled" : "inherit"}
+            color={disabled ? 'disabled' : 'inherit'}
           />
         </ClickAwayListener>
       );
@@ -336,7 +336,7 @@ class CalculationRow extends React.Component<
   renderErrorContainer() {
     const { classes, errorText } = this.props;
     const isError =
-      errorText !== "" && errorText !== null && errorText !== undefined;
+      errorText !== '' && errorText !== null && errorText !== undefined;
 
     return (
       <Collapse in={isError} className={classes.errorContainer}>
@@ -349,72 +349,72 @@ class CalculationRow extends React.Component<
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      display: "flex",
+      display: 'flex',
       flex: 1,
-      flexDirection: "column"
+      flexDirection: 'column',
     },
 
     horizontalContainer: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "flex-end",
-      backgroundColor: "#ffffff",
-      padding: "5px",
-      alignItems: "center"
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      backgroundColor: '#ffffff',
+      padding: '5px',
+      alignItems: 'center',
     },
 
     borderBottom: {
-      borderBottomStyle: "dashed",
-      borderBottomColor: "#d3d3d3",
-      borderBottomWidth: "1px"
+      borderBottomStyle: 'dashed',
+      borderBottomColor: '#d3d3d3',
+      borderBottomWidth: '1px',
     },
 
     labelContainer: {
-      display: "flex",
+      display: 'flex',
       flex: 1,
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "flex-start"
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
     },
 
     text: {
       marginTop: 10,
       marginLeft: 10,
       marginBottom: 10,
-      marginRight: 10
+      marginRight: 10,
     },
 
     bold: {
-      fontWeight: "bold"
+      fontWeight: 'bold',
     },
 
     errorText: {
-      color: "white"
+      color: 'white',
     },
 
     disabledText: {
-      color: "lightgrey"
+      color: 'lightgrey',
     },
 
     number: {
       lineHeight: 1.3,
-      textAlign: "right",
+      textAlign: 'right',
       marginTop: 5,
       marginRight: 5,
       marginBottom: 5,
       paddingTop: 6,
       paddingBottom: 7,
-      paddingRight: 5
+      paddingRight: 5,
     },
 
     numberField: {
       width: 150,
-      borderColor: "black",
-      textAlign: "right",
+      borderColor: 'black',
+      textAlign: 'right',
       borderWidth: 1,
       marginTop: 5,
       marginRight: 5,
-      marginBottom: 5
+      marginBottom: 5,
     },
 
     input: {
@@ -422,56 +422,56 @@ const styles = (theme: Theme) =>
       fontSize: theme.typography.subtitle1.fontSize,
       fontWeight: theme.typography.subtitle1.fontWeight,
       fontFamily: theme.typography.subtitle1.fontFamily,
-      textAlign: "right",
-      paddingLeft: "10px",
-      width: "100%",
-      paddingBottom: 8
+      textAlign: 'right',
+      paddingLeft: '10px',
+      width: '100%',
+      paddingBottom: 8,
     },
 
     switchButton: {
-      height: "100%",
-      justifyContent: "center",
-      alignItems: "center",
-      cursor: "pointer",
+      height: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      cursor: 'pointer',
 
-      "&:hover": {
-        backgroundColor: theme.palette.action.hover
-      }
+      '&:hover': {
+        backgroundColor: theme.palette.action.hover,
+      },
     },
 
     unitSwitch: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "flex-end",
-      marginTop: -15
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      marginTop: -15,
     },
 
     radio: {
-      transform: "scale(0.75, 0.75)"
+      transform: 'scale(0.75, 0.75)',
     },
 
     tooltipText: {
-      color: "#ffffff"
+      color: '#ffffff',
     },
 
     infoContainer: {
-      backgroundColor: theme.palette.primary.light
+      backgroundColor: theme.palette.primary.light,
     },
 
     collapseText: {
       padding: 2,
-      color: "white"
+      color: 'white',
     },
 
     errorContainer: {
-      backgroundColor: "red"
-    }
+      backgroundColor: 'red',
+    },
   });
 
 export default withStyles(styles)(withWidth()(CalculationRow));
 
 function isTablet(width: Breakpoint): boolean {
-  return isWidthDown("sm", width);
+  return isWidthDown('sm', width);
 }
 
 function isMobile(width: Breakpoint): boolean {
