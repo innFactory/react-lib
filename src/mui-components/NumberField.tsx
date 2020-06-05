@@ -52,7 +52,11 @@ function NumberField(props: Props) {
   // Component will Receive Props
   React.useEffect(() => {
     let newValue: string = props.value ? props.value.toString() : value;
-    newValue = value.replace('.', decimalSeparator ? decimalSeparator : ',');
+
+    newValue = newValue.replace(
+      /\./,
+      decimalSeparator ? decimalSeparator : ','
+    );
 
     setValue(newValue);
     setFocus(props.autoFocus ?? focus);

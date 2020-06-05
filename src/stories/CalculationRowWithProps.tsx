@@ -10,6 +10,10 @@ interface Props extends CRP {}
 function CalculationRowWithPropsNew(props: Props) {
   const [value, setValue] = React.useState<number>(0);
 
+  React.useEffect(() => {
+    setValue(props.value ?? 0);
+  }, []);
+
   const onChange = (value: number) => {
     console.log('Changed:', value);
   };
