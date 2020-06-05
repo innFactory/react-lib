@@ -1,256 +1,162 @@
 import {
   ClickAwayListener,
-  createStyles,
   FormControl,
   Input,
   InputAdornment,
+  makeStyles,
   Theme,
   Tooltip,
   Typography,
-  WithStyles,
-  withStyles,
 } from '@material-ui/core';
-import withWidth, { WithWidth } from '@material-ui/core/withWidth';
 import Cleave from 'cleave.js/react';
 import * as React from 'react';
 
-export namespace NumberField {
-  export interface Props extends WithStyles<typeof styles>, WithWidth {
-    value?: number | null;
-    endAdornment?: string;
-    className?: string;
-    isTooltipOpen?: boolean;
-    tooltipTitle?: string;
-    closeTooltip?: any;
-    tooltipPlacement?: any;
-    inputClassesStyle?: any;
-    tooltipClassesStyle?: any;
-    thousandSeparator?: string;
-    decimalSeparator?: string;
-    isNumericString?: boolean;
-    onFinished?: (value: number) => void;
-    onChange?: (value: number) => void;
-    autoFocus?: boolean;
-    style?: any;
-    negativeValue?: boolean; // allow negative values (default: false)
-  }
-  export interface State {
-    thousandSeparator: string;
-    decimalSeparator: string;
-    isNumericString: boolean;
-    isTooltipOpen: boolean;
-    tooltipTitle: string;
-    closeTooltip: any;
-    tooltipPlacement: any;
-    value: string;
-  }
+interface Props {
+  maxValue?: number | null;
+  value?: number | null;
+  endAdornment?: string;
+  className?: string;
+  isTooltipOpen?: boolean;
+  tooltipTitle?: string;
+  closeTooltip?: any;
+  tooltipPlacement?: any;
+  inputClassesStyle?: any;
+  tooltipClassesStyle?: any;
+  thousandSeparator?: string;
+  decimalSeparator?: string;
+  isNumericString?: boolean;
+  onFinished?: (value: number) => void;
+  onChange?: (value: number) => void;
+  autoFocus?: boolean;
+  style?: any;
+  negativeValue?: boolean; // allow negative values (default: false)
 }
 
-class NumberField extends React.Component<
-  NumberField.Props,
-  NumberField.State
-> {
-  state = {
-    thousandSeparator: '.',
-    decimalSeparator: ',',
-    isNumericString: true,
-    tooltipPlacement: undefined,
-    isTooltipOpen: false,
-    tooltipTitle: '',
-    closeTooltip: () => {
-      return;
-    },
-    value: '',
-  };
+function NumberField(props: Props) {
+  const classes = useStyles();
 
-  componentWillReceiveProps(nextProps: any) {
-    let value = nextProps.value ? nextProps.value + '' : this.state.value;
+  const [thousandSeparator, setThousandSeparator] = React.useState<string>('.');
+  const [decimalSeparator, setDecimalSeparator] = React.useState<string>(',');
+  const [isNumericString, setIsNumericString] = React.useState<boolean>(true);
+  const [isTooltipOpen, setIsTooltipOpen] = React.useState<boolean>(false);
+  const [tooltipPlacement, setTooltipPlacement] = React.useState<any>(
+    undefined
+  );
+  const [tooltipTitle, setTooltipTitle] = React.useState<string>('');
+  const [closeTooltip, setCloseTooltip] = React.useState<any>(() => {
+    return;
+  });
+  const [value, setValue] = React.useState<string>('');
+  const [focus, setFocus] = React.useState(false);
 
-    const { decimalSeparator } = nextProps;
-    value = value.replace('.', decimalSeparator ? decimalSeparator : ',');
+  // Component will Receive Props
+  React.useEffect(() => {
+    let newValue: string = props.value ? props.value.toString() : value;
+    newValue = value.replace('.', decimalSeparator ? decimalSeparator : ',');
 
-    this.setState({
-      thousandSeparator: nextProps.thousandSeparator
-        ? nextProps.thousandSeparator
-        : this.state.thousandSeparator,
-      decimalSeparator: nextProps.decimalSeparator
-        ? nextProps.decimalSeparator
-        : this.state.decimalSeparator,
-      isNumericString:
-        nextProps.isNumericString !== undefined
-          ? nextProps.isNumericString
-          : this.state.isNumericString,
-      tooltipPlacement: nextProps.tooltipPlacement
-        ? nextProps.tooltipPlacement
-        : 'left',
-      isTooltipOpen:
-        nextProps.isTooltipOpen !== undefined
-          ? nextProps.isTooltipOpen
-          : this.state.isTooltipOpen,
-      tooltipTitle: nextProps.tooltipTitle
-        ? nextProps.tooltipTitle
-        : this.state.tooltipTitle,
-      closeTooltip: nextProps.closeTooltip
-        ? nextProps.closeTooltip
-        : this.state.closeTooltip,
-      value,
-    });
-  }
+    setValue(newValue);
+    setFocus(props.autoFocus ?? focus);
+    setThousandSeparator(props.thousandSeparator ?? thousandSeparator);
+    setDecimalSeparator(props.decimalSeparator ?? decimalSeparator);
+    setIsNumericString(props.isNumericString ?? isNumericString);
+    setTooltipPlacement(props.tooltipPlacement ?? tooltipPlacement);
+    setIsTooltipOpen(props.isTooltipOpen ?? isTooltipOpen);
+    setTooltipTitle(props.tooltipTitle ?? tooltipTitle);
+    setCloseTooltip(props.closeTooltip ?? closeTooltip);
+  }, []);
 
   /**
    * select entire input if field is focused
    */
-  handleFocus = () => (event: any) => {
-    if (this.state.isTooltipOpen) {
-      this.state.closeTooltip();
+  const handleFocus = () => (event: React.FocusEvent<HTMLDivElement>) => {
+    if (isTooltipOpen) {
+      closeTooltip();
     }
-
     // assign event to local variable and call event persist
     // https://stackoverflow.com/questions/49500255/warning-this-synthetic-event-is-reused-for-performance-reasons-happening-with
     event.persist();
     const { target } = event;
-    target.select();
-
-    setTimeout(() => target.select(), 20);
+    target.focus();
+    setTimeout(() => target.focus(), 20);
+    setFocus(true);
   };
 
   /**
    * use default style, defined in styles, if no style is given for input and underline
    */
-  tooltipClassesStyle() {
-    const { classes } = this.props;
+  const tooltipClassesStyle = () => {
+    const classes = useStyles();
 
-    if (this.props.tooltipClassesStyle) {
-      return this.props.tooltipClassesStyle;
+    if (props.tooltipClassesStyle) {
+      return props.tooltipClassesStyle;
     } else {
       return { tooltip: classes.tooltip };
     }
-  }
+  };
 
   /**
    * use default style, defined in styles, if no style is given for input and underline
    */
-  inputClassesStyle() {
-    const { classes } = this.props;
+  const inputClassesStyle = () => {
+    const classes = useStyles();
 
-    if (this.props.inputClassesStyle) {
-      return this.props.inputClassesStyle;
+    if (props.inputClassesStyle) {
+      return props.inputClassesStyle;
     } else {
       return { input: classes.input, underline: classes.underline };
     }
-  }
-
-  render() {
-    const { classes, autoFocus } = this.props;
-
-    return (
-      <div>
-        <FormControl className={this.props.className} style={this.props.style}>
-          <Tooltip
-            classes={this.tooltipClassesStyle()}
-            title={this.state.tooltipTitle}
-            open={this.state.isTooltipOpen}
-            placement={this.state.tooltipPlacement}
-          >
-            <ClickAwayListener onClickAway={this.onFinished}>
-              <Input
-                data-cy='numberField'
-                autoFocus={autoFocus}
-                onBlur={() => this.onFinished()}
-                onKeyPress={this.onKeyPress}
-                onKeyDown={(ev) => {
-                  if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
-                    this.onFinished();
-                  }
-                }}
-                classes={this.inputClassesStyle()}
-                value={this.state.value ? this.state.value : ''}
-                onChange={this.onChange}
-                endAdornment={
-                  <InputAdornment
-                    className={classes.endAdornment}
-                    position={'end'}
-                  >
-                    <Typography variant='subtitle1'>
-                      {this.props.endAdornment}
-                    </Typography>
-                  </InputAdornment>
-                }
-                onFocusCapture={this.handleFocus()}
-                disableUnderline={true}
-                type={'text'}
-                inputComponent={this.maskedTextField}
-                inputProps={{ inputmode: 'decimal' }}
-              />
-            </ClickAwayListener>
-          </Tooltip>
-        </FormControl>
-      </div>
-    );
-  }
-
-  maskedTextField = (props: any) => {
-    const { decimalSeparator, thousandSeparator } = this.props;
-    let { options, inputRef, ...other } = props;
-    return (
-      <Cleave
-        {...other}
-        ref={(ref: any) => {
-          inputRef = ref;
-        }}
-        options={{
-          numeral: true,
-          numeralDecimalMark: decimalSeparator ? decimalSeparator : ',',
-          delimiter: thousandSeparator ? thousandSeparator : '.',
-        }}
-      />
-    );
   };
 
-  onKeyPress = (ev: React.KeyboardEvent<HTMLDivElement>) => {
+  const onKeyPress = (ev: React.KeyboardEvent<HTMLDivElement>) => {
     if (ev.key === 'Enter') {
-      this.onFinished();
+      onFinished();
     }
   };
 
-  onChange = (
+  const onChange = (
     ev: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
-    const { onChange } = this.props;
+    const { onChange, maxValue } = props;
     const value = ev.target.value;
+    const numValue = stringValueToNum(value);
+
+    if (maxValue && numValue && numValue > maxValue) {
+      onFinished();
+      return;
+    }
 
     if (onChange) {
-      const numValue = this.stringValueToNum(value);
       onChange(numValue !== undefined ? numValue : 0);
     }
-    this.setState({ value });
+    setValue(value);
   };
 
-  onFinished() {
-    const { onFinished } = this.props;
-    let { value } = this.state;
+  const onFinished = () => {
+    const { onFinished } = props;
 
     if (!onFinished) {
       return;
     }
-    const numValue = this.stringValueToNum(value);
+    const numValue = stringValueToNum(value);
 
     if (numValue !== undefined) {
       onFinished(numValue);
-      this.setState({ value: numValue + '' });
+      setValue(numValue + '');
     } else {
       onFinished(0);
-      this.setState({ value: '' });
+      setValue('');
     }
-  }
+    setFocus(false);
+  };
 
-  stringValueToNum(value: string): number | undefined {
-    const { negativeValue, decimalSeparator, thousandSeparator } = this.props;
+  const stringValueToNum = (value: string): number | undefined => {
+    const { negativeValue, thousandSeparator } = props;
 
     try {
-      value = value.replace(thousandSeparator ? thousandSeparator : '.', '');
-      value = value.replace(thousandSeparator ? thousandSeparator : '.', '');
-      value = value.replace(decimalSeparator ? decimalSeparator : ',', '.');
+      const thousandReg = new RegExp(thousandSeparator ?? /\./, 'gm');
+      value = value.replace(thousandReg, '');
+      const decimalReg = new RegExp(decimalSeparator ?? ',', 'g');
+      value = value.replace(decimalReg, '.');
       const num = Number.parseFloat(value);
 
       if (isNaN(num)) {
@@ -267,44 +173,104 @@ class NumberField extends React.Component<
     } catch (e) {
       return;
     }
-  }
+  };
+
+  const maskedTextField = (input: any) => {
+    let { options, inputRef, ...other } = input;
+    const { decimalSeparator, thousandSeparator } = props;
+
+    return (
+      <Cleave
+        {...other}
+        ref={(ref: any) => {
+          inputRef = ref;
+        }}
+        options={{
+          numeral: true,
+          numeralDecimalMark: decimalSeparator ? decimalSeparator : ',',
+          delimiter: thousandSeparator ? thousandSeparator : '.',
+        }}
+      />
+    );
+  };
+
+  return (
+    <FormControl className={props.className} style={props.style}>
+      <Tooltip
+        classes={tooltipClassesStyle()}
+        title={tooltipTitle}
+        open={isTooltipOpen}
+        placement={tooltipPlacement}
+      >
+        <ClickAwayListener onClickAway={onFinished}>
+          <Input
+            data-cy='numberField'
+            autoFocus={focus}
+            onBlur={() => onFinished()}
+            onKeyPress={onKeyPress}
+            onKeyDown={(ev) => {
+              if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
+                onFinished();
+              }
+            }}
+            classes={inputClassesStyle()}
+            value={value ? value : ''}
+            onChange={onChange}
+            endAdornment={
+              <InputAdornment className={classes.endAdornment} position={'end'}>
+                <Typography variant='subtitle1'>
+                  {props.endAdornment}
+                </Typography>
+              </InputAdornment>
+            }
+            onFocusCapture={handleFocus()}
+            disableUnderline={true}
+            type={'text'}
+            inputComponent={maskedTextField}
+            inputProps={{ inputMode: 'decimal' }}
+          />
+        </ClickAwayListener>
+      </Tooltip>
+    </FormControl>
+  );
 }
 
-const styles = (theme: Theme) =>
-  createStyles({
-    tooltip: {
-      backgroundColor: '#FF0000',
-      color: '#ffffff',
-    },
-    input: {
-      color: theme.typography.subtitle1.color,
-      fontSize: theme.typography.subtitle1.fontSize,
-      fontWeight: theme.typography.subtitle1.fontWeight,
-      fontFamily: theme.typography.subtitle1.fontFamily,
-      lineHeight: theme.typography.subtitle1.lineHeight,
-      textAlign: 'right',
-      paddingLeft: '10px',
-      width: '100%',
+const useStyles = makeStyles((theme: Theme) => ({
+  tooltip: () => ({
+    backgroundColor: '#FF0000',
+    color: '#ffffff',
+  }),
+
+  input: () => ({
+    color: theme.typography.subtitle1.color,
+    fontSize: theme.typography.subtitle1.fontSize,
+    fontWeight: theme.typography.subtitle1.fontWeight,
+    fontFamily: theme.typography.subtitle1.fontFamily,
+    lineHeight: theme.typography.subtitle1.lineHeight,
+    textAlign: 'right',
+    paddingLeft: '10px',
+    width: '100%',
+  }),
+
+  underline: () => ({
+    '&:hover:before': {
+      backgroundColor: '#d3d3d3' + '!important',
+      height: 2,
     },
 
-    underline: {
-      '&:hover:before': {
-        backgroundColor: '#d3d3d3' + '!important',
-        height: 2,
-      },
-      '&:before': {
-        backgroundColor: '#d3d3d3',
-        height: 2,
-      },
-      '&:after': {
-        backgroundColor: '#d3d3d3',
-        height: 2,
-      },
+    '&:before': {
+      backgroundColor: '#d3d3d3',
+      height: 2,
     },
-    endAdornment: {
-      padding: '4px 5px 0 0',
-      marginBottom: 5,
+    '&:after': {
+      backgroundColor: '#d3d3d3',
+      height: 2,
     },
-  });
+  }),
+  endAdornment: () => ({
+    padding: '4px 5px 0 0',
+    marginBottom: 5,
+  }),
+}));
 
-export default withStyles(styles)(withWidth()(NumberField));
+export default NumberField;

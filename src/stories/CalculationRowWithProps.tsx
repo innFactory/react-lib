@@ -1,46 +1,33 @@
+// prettier-ignore
 import { createStyles, withStyles } from '@material-ui/core';
-import withWidth from '@material-ui/core/withWidth';
 import * as React from 'react';
-import CalculationRow, {
-  CalculationRow as CR,
+import CalculationRowNew, {
+  Props as CRP,
 } from '../mui-components/CalculationRow';
 
-export namespace CalculationRowWithProps {
-  export interface Props extends CR.Props {}
+interface Props extends CRP {}
 
-  export interface State {
-    value?: number;
-  }
-}
+function CalculationRowWithPropsNew(props: Props) {
+  const [value, setValue] = React.useState<number>(0);
 
-class CalculationRowWithProps extends React.Component<
-  CalculationRowWithProps.Props,
-  CalculationRowWithProps.State
-> {
-  state = {
-    value: this.props.value,
-  };
-
-  render() {
-    return (
-      <CalculationRow
-        {...this.props}
-        value={this.state.value}
-        onFinished={this.onFinished}
-        onChange={this.onChange}
-      />
-    );
-  }
-
-  onChange = (value: number) => {
+  const onChange = (value: number) => {
     console.log('Changed:', value);
   };
 
-  onFinished = (value: number) => {
+  const onFinished = (value: number) => {
     console.log('Finished:', value);
-    this.setState({ value });
+    setValue(value);
   };
+
+  return (
+    <CalculationRowNew
+      {...props}
+      value={value}
+      onFinished={onFinished}
+      onChange={onChange}
+    />
+  );
 }
 const styles = () => createStyles({});
 
-export default withStyles(styles)(withWidth()(CalculationRowWithProps));
+export default withStyles(styles)(CalculationRowWithPropsNew);
