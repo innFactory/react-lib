@@ -72,7 +72,9 @@ function NumberField(props: Props) {
   /**
    * select entire input if field is focused
    */
-  const handleFocus = () => (event: React.FocusEvent<HTMLDivElement>) => {
+  const handleFocus = (
+    event: React.FocusEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
     if (isTooltipOpen) {
       closeTooltip();
     }
@@ -80,8 +82,9 @@ function NumberField(props: Props) {
     // https://stackoverflow.com/questions/49500255/warning-this-synthetic-event-is-reused-for-performance-reasons-happening-with
     event.persist();
     const { target } = event;
-    target.focus();
-    setTimeout(() => target.focus(), 20);
+
+    target.select();
+    setTimeout(() => target.select(), 20);
     setFocus(true);
   };
 
@@ -227,7 +230,7 @@ function NumberField(props: Props) {
                 </Typography>
               </InputAdornment>
             }
-            onFocusCapture={handleFocus()}
+            onFocus={handleFocus}
             disableUnderline={true}
             type={'text'}
             inputComponent={maskedTextField}
