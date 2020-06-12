@@ -1,9 +1,9 @@
 import { Paper } from '@material-ui/core';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { default as NewNumberField } from '../mui-components/NumberField';
+import { NumberField } from '../mui-components/NumberField';
 import RadioCalcRows from '../mui-components/RadioCalcRows';
-import CalculationRowWithProps from './CalculationRowWithProps';
+import { CalculationRowWithProps } from './CalculationRowWithProps';
 import { withTheme } from './index.stories';
 
 storiesOf('CalculationRow', module)
@@ -149,7 +149,7 @@ storiesOf('CalculationRow', module)
     const [value, setValue] = React.useState(1000);
     return withTheme(
       <Paper style={{ margin: 20, maxWidth: 500 }}>
-        <NewNumberField
+        <NumberField
           value={value}
           onChange={(value: number) => {
             setValue(value), console.log('onChangeValue: ' + value);

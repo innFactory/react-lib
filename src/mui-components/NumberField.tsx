@@ -1,12 +1,14 @@
 import {
   ClickAwayListener,
+  createStyles,
   FormControl,
   Input,
   InputAdornment,
-  makeStyles,
   Theme,
   Tooltip,
   Typography,
+  withStyles,
+  WithStyles,
 } from '@material-ui/core';
 import Cleave from 'cleave.js/react';
 import * as React from 'react';
@@ -32,9 +34,48 @@ interface Props {
   negativeValue?: boolean; // allow negative values (default: false)
 }
 
-function NumberField(props: Props) {
-  const classes = useStyles();
+const NumberFieldStyles = (theme: Theme) =>
+  createStyles({
+    tooltip: () => ({
+      backgroundColor: '#FF0000',
+      color: '#ffffff',
+    }),
 
+    input: () => ({
+      color: theme.typography.subtitle1.color,
+      fontSize: theme.typography.subtitle1.fontSize,
+      fontWeight: theme.typography.subtitle1.fontWeight,
+      fontFamily: theme.typography.subtitle1.fontFamily,
+      lineHeight: theme.typography.subtitle1.lineHeight,
+      textAlign: 'right',
+      paddingLeft: '10px',
+      width: '100%',
+    }),
+
+    underline: () => ({
+      '&:hover:before': {
+        backgroundColor: '#d3d3d3' + '!important',
+        height: 2,
+      },
+
+      '&:before': {
+        backgroundColor: '#d3d3d3',
+        height: 2,
+      },
+      '&:after': {
+        backgroundColor: '#d3d3d3',
+        height: 2,
+      },
+    }),
+    endAdornment: () => ({
+      padding: '4px 5px 0 0',
+      marginBottom: 5,
+    }),
+  });
+
+export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
+  props: Props & WithStyles<typeof NumberFieldStyles>
+) {
   const [thousandSeparator, setThousandSeparator] = React.useState<string>('.');
   const [decimalSeparator, setDecimalSeparator] = React.useState<string>(',');
   const [isNumericString, setIsNumericString] = React.useState<boolean>(true);
@@ -48,6 +89,7 @@ function NumberField(props: Props) {
   });
   const [value, setValue] = React.useState<string>('');
   const [focus, setFocus] = React.useState(false);
+  const { classes } = props;
 
   // Component will Receive Props
   React.useEffect(() => {
@@ -82,9 +124,10 @@ function NumberField(props: Props) {
     // https://stackoverflow.com/questions/49500255/warning-this-synthetic-event-is-reused-for-performance-reasons-happening-with
     event.persist();
     const { target } = event;
-
-    target.select();
-    setTimeout(() => target.select(), 20);
+    if (focus) {
+      target.select();
+    }
+    target.focus();
     setFocus(true);
   };
 
@@ -92,7 +135,7 @@ function NumberField(props: Props) {
    * use default style, defined in styles, if no style is given for input and underline
    */
   const tooltipClassesStyle = () => {
-    const classes = useStyles();
+    const { classes } = props;
 
     if (props.tooltipClassesStyle) {
       return props.tooltipClassesStyle;
@@ -105,7 +148,7 @@ function NumberField(props: Props) {
    * use default style, defined in styles, if no style is given for input and underline
    */
   const inputClassesStyle = () => {
-    const classes = useStyles();
+    const { classes } = props;
 
     if (props.inputClassesStyle) {
       return props.inputClassesStyle;
@@ -240,44 +283,4 @@ function NumberField(props: Props) {
       </Tooltip>
     </FormControl>
   );
-}
-
-const useStyles = makeStyles((theme: Theme) => ({
-  tooltip: () => ({
-    backgroundColor: '#FF0000',
-    color: '#ffffff',
-  }),
-
-  input: () => ({
-    color: theme.typography.subtitle1.color,
-    fontSize: theme.typography.subtitle1.fontSize,
-    fontWeight: theme.typography.subtitle1.fontWeight,
-    fontFamily: theme.typography.subtitle1.fontFamily,
-    lineHeight: theme.typography.subtitle1.lineHeight,
-    textAlign: 'right',
-    paddingLeft: '10px',
-    width: '100%',
-  }),
-
-  underline: () => ({
-    '&:hover:before': {
-      backgroundColor: '#d3d3d3' + '!important',
-      height: 2,
-    },
-
-    '&:before': {
-      backgroundColor: '#d3d3d3',
-      height: 2,
-    },
-    '&:after': {
-      backgroundColor: '#d3d3d3',
-      height: 2,
-    },
-  }),
-  endAdornment: () => ({
-    padding: '4px 5px 0 0',
-    marginBottom: 5,
-  }),
-}));
-
-export default NumberField;
+});

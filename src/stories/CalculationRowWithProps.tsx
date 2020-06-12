@@ -1,37 +1,63 @@
 // prettier-ignore
-import { createStyles, withStyles } from '@material-ui/core';
+import { createStyles, withStyles, WithStyles } from '@material-ui/core';
 import * as React from 'react';
-import CalculationRowNew, {
-  Props as CRP,
-} from '../mui-components/CalculationRow';
+import { CalculationRow, Props as CRP } from '../mui-components/CalculationRow';
 
 interface Props extends CRP {}
 
-function CalculationRowWithPropsNew(props: Props) {
-  const [value, setValue] = React.useState<number>(0);
+const CalculationRowStyles = () =>
+  createStyles({
+    root: {},
+    horizontalContainer: {},
+    borderBottom: {},
+    labelContainer: {},
+    text: {},
+    bold: {},
+    errorText: {},
+    disabledText: {},
+    number: {},
+    numberField: {},
+    input: {},
+    switchButton: {},
+    unitSwitch: {},
+    radio: {},
+    tooltipText: {},
+    infoContainer: {},
+    collapseText: {},
+    errorContainer: {},
+    tooltip: {},
+    underline: {},
+    endAdornment: {},
+  });
 
-  React.useEffect(() => {
-    setValue(props.value ?? 0);
-  }, []);
+export const CalculationRowWithProps = withStyles(CalculationRowStyles)(
+  function CalculationRowWithPropsNew(
+    props: Props & WithStyles<typeof CalculationRowStyles>
+  ) {
+    const [value, setValue] = React.useState<number>(0);
+    const { classes } = props;
 
-  const onChange = (value: number) => {
-    console.log('Changed:', value);
-  };
+    React.useEffect(() => {
+      setValue(props.value ?? 0);
+    }, []);
 
-  const onFinished = (value: number) => {
-    console.log('Finished:', value);
-    setValue(value);
-  };
+    const onChange = (value: number) => {
+      console.log('Changed:', value);
+    };
 
-  return (
-    <CalculationRowNew
-      {...props}
-      value={value}
-      onFinished={onFinished}
-      onChange={onChange}
-    />
-  );
-}
-const styles = () => createStyles({});
+    const onFinished = (value: number) => {
+      console.log('Finished:', value);
+      setValue(value);
+    };
 
-export default withStyles(styles)(CalculationRowWithPropsNew);
+    return (
+      <CalculationRow
+        {...props}
+        value={value}
+        onFinished={onFinished}
+        onChange={onChange}
+        classes={classes}
+      />
+    );
+  }
+);
