@@ -241,9 +241,9 @@ export const CalculationRow = withStyles(CalculationRowStyles)(
                 tooltip: classes.tooltip,
                 underline: classes.underline,
               }}
+              autoFocus
               onFinished={(v: number) => onFinished(v)}
               onChange={onChange}
-              autoFocus
               style={{
                 backgroundColor: nbColor.editing,
               }}
@@ -452,3 +452,5 @@ export const CalculationRow = withStyles(CalculationRowStyles)(
     );
   }
 );
+
+export default withStyles(CalculationRowStyles)(CalculationRow);

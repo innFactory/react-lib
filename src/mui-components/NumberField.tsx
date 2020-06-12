@@ -8,7 +8,7 @@ import {
   Tooltip,
   Typography,
   withStyles,
-  WithStyles,
+  WithStyles
 } from '@material-ui/core';
 import Cleave from 'cleave.js/react';
 import * as React from 'react';
@@ -88,20 +88,11 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
     return;
   });
   const [value, setValue] = React.useState<string>('');
-  const [focus, setFocus] = React.useState(false);
   const { classes } = props;
+  const inputEl = React.useRef<HTMLDivElement>(null);
 
   // Component will Receive Props
   React.useEffect(() => {
-    let newValue: string = props.value ? props.value.toString() : value;
-
-    newValue = newValue.replace(
-      /\./,
-      decimalSeparator ? decimalSeparator : ','
-    );
-
-    setValue(newValue);
-    setFocus(props.autoFocus ?? focus);
     setThousandSeparator(props.thousandSeparator ?? thousandSeparator);
     setDecimalSeparator(props.decimalSeparator ?? decimalSeparator);
     setIsNumericString(props.isNumericString ?? isNumericString);
@@ -110,6 +101,19 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
     setTooltipTitle(props.tooltipTitle ?? tooltipTitle);
     setCloseTooltip(props.closeTooltip ?? closeTooltip);
   }, []);
+
+  React.useEffect(() => {
+    let newValue: string = props.value ? props.value.toString() : value;
+
+    newValue = newValue.replace(
+      /\./,
+      decimalSeparator ? decimalSeparator : ','
+    );
+
+  
+
+    setValue(newValue);
+  }, [props.value]);
 
   /**
    * select entire input if field is focused
@@ -124,11 +128,10 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
     // https://stackoverflow.com/questions/49500255/warning-this-synthetic-event-is-reused-for-performance-reasons-happening-with
     event.persist();
     const { target } = event;
-    if (focus) {
-      target.select();
-    }
-    target.focus();
-    setFocus(true);
+    target.select();
+    if (inputEl.current) inputEl.current.focus();
+    console.log(inputEl);
+    setTimeout(() => target.select(), 50);
   };
 
   /**
@@ -169,16 +172,14 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
     const { onChange, maxValue } = props;
     const value = ev.target.value;
     const numValue = stringValueToNum(value);
-
     if (maxValue && numValue && numValue > maxValue) {
       onFinished();
       return;
     }
-
     if (onChange) {
       onChange(numValue !== undefined ? numValue : 0);
     }
-    setValue(value);
+    // setValue(value);
   };
 
   const onFinished = () => {
@@ -196,7 +197,6 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
       onFinished(0);
       setValue('');
     }
-    setFocus(false);
   };
 
   const stringValueToNum = (value: string): number | undefined => {
@@ -232,9 +232,8 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
     return (
       <Cleave
         {...other}
-        ref={(ref: any) => {
-          inputRef = ref;
-        }}
+        // onChange={() => console.log('test')}
+        ref={inputEl}
         options={{
           numeral: true,
           numeralDecimalMark: decimalSeparator ? decimalSeparator : ',',
@@ -255,7 +254,7 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
         <ClickAwayListener onClickAway={onFinished}>
           <Input
             data-cy='numberField'
-            autoFocus={focus}
+            autoFocus={props.autoFocus}
             onBlur={() => onFinished()}
             onKeyPress={onKeyPress}
             onKeyDown={(ev) => {
@@ -284,3 +283,5 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
     </FormControl>
   );
 });
+
+export default withStyles(NumberFieldStyles)(NumberField);

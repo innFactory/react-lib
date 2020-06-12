@@ -3,7 +3,9 @@ import { createStyles, withStyles, WithStyles } from '@material-ui/core';
 import * as React from 'react';
 import { CalculationRow, Props as CRP } from '../mui-components/CalculationRow';
 
-interface Props extends CRP {}
+interface Props extends CRP {
+  onChange?: (value: number) => void;
+}
 
 const CalculationRowStyles = () =>
   createStyles({
@@ -43,6 +45,7 @@ export const CalculationRowWithProps = withStyles(CalculationRowStyles)(
 
     const onChange = (value: number) => {
       console.log('Changed:', value);
+      if (props.onChange) props.onChange(value);
     };
 
     const onFinished = (value: number) => {

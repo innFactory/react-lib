@@ -8,13 +8,16 @@ import { withTheme } from './index.stories';
 
 storiesOf('CalculationRow', module)
   .add('enabled with €', () => {
+    const [value, setValue] = React.useState(10000);
+
     return withTheme(
       <Paper style={{ margin: 20, maxWidth: 500 }}>
         <CalculationRowWithProps
           editable
           label='Eigenkapital'
           units={['€']}
-          value={100000}
+          value={value}
+          onChange={(v) => setValue(v)}
         />
         <CalculationRowWithProps
           maxValue={6000}
@@ -146,13 +149,14 @@ storiesOf('CalculationRow', module)
     );
   })
   .add('newNumberInput', () => {
-    const [value, setValue] = React.useState(1000);
+    // const [value, setValue] = React.useState(1000);
     return withTheme(
       <Paper style={{ margin: 20, maxWidth: 500 }}>
         <NumberField
-          value={value}
+          value={1000}
           onChange={(value: number) => {
-            setValue(value), console.log('onChangeValue: ' + value);
+            // setValue(value), console.log('onChangeValue: ' + value);
+            console.log(value);
           }}
         />
       </Paper>
