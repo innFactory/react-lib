@@ -188,16 +188,15 @@ export const CalculationRow = withStyles(CalculationRowStyles)(
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     React.useEffect(() => {
-      const { decimalDigits, isEditing, selectedUnit, units } = props;
+      const { decimalDigits, selectedUnit, units } = props;
 
       setCurrentUnit(selectedUnit ? selectedUnit : units ? units[0] : '');
       setDecimalDigits(decimalDigits === undefined ? 2 : decimalDigits);
-      setEditing(isEditing ? isEditing : false);
     }, []);
 
     React.useEffect(() => {
       setEditing(isEditing ? isEditing : false);
-    }, []);
+    }, [props.isEditing]);
 
     const renderNumberField = () => {
       const {
@@ -234,6 +233,7 @@ export const CalculationRow = withStyles(CalculationRowStyles)(
                   ? parseFloat(value.toFixed(decimalDigits))
                   : value
               }
+              decimalPlaces={decimalDigits}
               endAdornment={currentUnit}
               classes={{
                 input: classes.input,
@@ -277,7 +277,7 @@ export const CalculationRow = withStyles(CalculationRowStyles)(
                 backgroundColor: bgColor,
                 width: editable && !disabled ? '150px' : '',
               }}
-              onClick={() => receiveFocus()}
+              onClick={receiveFocus}
             >
               {numberToString(value, decimalDigits, undefinedValuePlaceholder)}{' '}
               {' ' + currentUnit}
@@ -422,7 +422,7 @@ export const CalculationRow = withStyles(CalculationRowStyles)(
       >
         <div
           className={classnames(classes.horizontalContainer)}
-          onFocusCapture={() => receiveFocus()}
+          onFocusCapture={receiveFocus}
           tabIndex={props.editable && !props.disabled ? 0 : -1}
           style={{
             backgroundColor: props.errorText ? '#FFF0F0' : 'white',

@@ -8,9 +8,8 @@ import {
   Tooltip,
   Typography,
   withStyles,
-  WithStyles
+  WithStyles,
 } from '@material-ui/core';
-import Cleave from 'cleave.js/react';
 import * as React from 'react';
 
 interface Props {
@@ -27,6 +26,7 @@ interface Props {
   thousandSeparator?: string;
   decimalSeparator?: string;
   isNumericString?: boolean;
+  decimalPlaces?: number;
   onFinished?: (value: number) => void;
   onChange?: (value: number) => void;
   autoFocus?: boolean;
@@ -89,7 +89,7 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
   });
   const [value, setValue] = React.useState<string>('');
   const { classes } = props;
-  const inputEl = React.useRef<HTMLDivElement>(null);
+  const inputEl = React.useRef(null);
 
   // Component will Receive Props
   React.useEffect(() => {
@@ -110,17 +110,13 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
       decimalSeparator ? decimalSeparator : ','
     );
 
-  
-
     setValue(newValue);
   }, [props.value]);
 
   /**
    * select entire input if field is focused
    */
-  const handleFocus = (
-    event: React.FocusEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
+  function handleFocus(event: any) {
     if (isTooltipOpen) {
       closeTooltip();
     }
@@ -129,10 +125,8 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
     event.persist();
     const { target } = event;
     target.select();
-    if (inputEl.current) inputEl.current.focus();
-    console.log(inputEl);
-    setTimeout(() => target.select(), 50);
-  };
+    setTimeout(() => target.select(), 20);
+  }
 
   /**
    * use default style, defined in styles, if no style is given for input and underline
@@ -170,8 +164,8 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
     ev: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
     const { onChange, maxValue } = props;
-    const value = ev.target.value;
-    const numValue = stringValueToNum(value);
+    const eventValue = ev.target.value;
+    const numValue = stringValueToNum(eventValue);
     if (maxValue && numValue && numValue > maxValue) {
       onFinished();
       return;
@@ -179,7 +173,35 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
     if (onChange) {
       onChange(numValue !== undefined ? numValue : 0);
     }
-    // setValue(value);
+
+    const convertedValue = valueToString(eventValue);
+    setValue(convertedValue ? convertedValue : value);
+  };
+
+  const valueToString = (value: string) => {
+    if (value) {
+      let convertedValue: string = value;
+      if (value.indexOf(',') > 0) {
+        const splittString = value.split(',');
+
+        if (!isNaN(parseInt(splittString[0])) && splittString[1].length === 0) {
+          return value;
+        } else if (
+          props.decimalPlaces
+            ? splittString[1].length > props.decimalPlaces
+            : splittString[1].length > 2
+        ) {
+          return;
+        }
+      } else {
+        const numValue = stringValueToNum(value);
+        convertedValue = Intl.NumberFormat('de-DE', {
+          style: 'decimal',
+        }).format(numValue ? numValue : parseInt(value));
+      }
+      return convertedValue;
+    }
+    return value;
   };
 
   const onFinished = () => {
@@ -188,6 +210,7 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
     if (!onFinished) {
       return;
     }
+
     const numValue = stringValueToNum(value);
 
     if (numValue !== undefined) {
@@ -225,24 +248,6 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
     }
   };
 
-  const maskedTextField = (input: any) => {
-    let { options, inputRef, ...other } = input;
-    const { decimalSeparator, thousandSeparator } = props;
-
-    return (
-      <Cleave
-        {...other}
-        // onChange={() => console.log('test')}
-        ref={inputEl}
-        options={{
-          numeral: true,
-          numeralDecimalMark: decimalSeparator ? decimalSeparator : ',',
-          delimiter: thousandSeparator ? thousandSeparator : '.',
-        }}
-      />
-    );
-  };
-
   return (
     <FormControl className={props.className} style={props.style}>
       <Tooltip
@@ -253,6 +258,7 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
       >
         <ClickAwayListener onClickAway={onFinished}>
           <Input
+            ref={inputEl}
             data-cy='numberField'
             autoFocus={props.autoFocus}
             onBlur={() => onFinished()}
@@ -272,10 +278,9 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
                 </Typography>
               </InputAdornment>
             }
-            onFocus={handleFocus}
+            onFocusCapture={handleFocus}
             disableUnderline={true}
             type={'text'}
-            inputComponent={maskedTextField}
             inputProps={{ inputMode: 'decimal' }}
           />
         </ClickAwayListener>
