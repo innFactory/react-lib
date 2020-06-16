@@ -155,7 +155,6 @@ storiesOf('CalculationRow', module)
         <NumberField
           value={1000}
           onChange={(value: number) => {
-            // setValue(value), console.log('onChangeValue: ' + value);
             console.log(value);
           }}
         />

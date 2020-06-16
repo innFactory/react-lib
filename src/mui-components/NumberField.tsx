@@ -166,15 +166,16 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
     const { onChange, maxValue } = props;
     const eventValue = ev.target.value;
     const numValue = stringValueToNum(eventValue);
+    const convertedValue = valueToString(eventValue);
+
     if (maxValue && numValue && numValue > maxValue) {
       onFinished();
       return;
     }
-    if (onChange) {
+    if (onChange && convertedValue) {
       onChange(numValue !== undefined ? numValue : 0);
     }
 
-    const convertedValue = valueToString(eventValue);
     setValue(convertedValue ? convertedValue : value);
   };
 
