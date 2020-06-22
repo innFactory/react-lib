@@ -174,7 +174,6 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
     if (onChange && convertedValue) {
       onChange(numValue !== undefined ? numValue : 0);
     }
-    console.log(convertedValue);
     if (convertedValue !== 'NaN' && convertedValue !== '') {
       setValue(convertedValue ? convertedValue : value);
     } else {
