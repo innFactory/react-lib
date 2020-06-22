@@ -167,7 +167,6 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
     const eventValue = ev.target.value;
     const numValue = stringValueToNum(eventValue);
     const convertedValue = valueToString(eventValue);
-
     if (maxValue && numValue && numValue > maxValue) {
       onFinished();
       return;
@@ -175,8 +174,11 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
     if (onChange && convertedValue) {
       onChange(numValue !== undefined ? numValue : 0);
     }
-
-    setValue(convertedValue ? convertedValue : value);
+    if (convertedValue !== 'NaN' && convertedValue !== '') {
+      setValue(convertedValue ? convertedValue : value);
+    } else {
+      setValue('');
+    }
   };
 
   const valueToString = (value: string) => {
