@@ -1,6 +1,6 @@
 {
   "name": "react-lib",
-  "version": "0.0.37",
+  "version": "0.2.0",
   "description": "",
   "author": "spoeck",
   "license": "",
@@ -24,8 +24,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "classnames": ">= 2.2.6",
-    "cleave.js": "^1.4.10"
+    "classnames": ">= 2.2.6"
   },
   "peerDependencies": {
     "react": "16.12.0",

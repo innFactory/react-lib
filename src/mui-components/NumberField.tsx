@@ -1,14 +1,15 @@
 import {
   ClickAwayListener,
+  createStyles,
   FormControl,
   Input,
   InputAdornment,
-  makeStyles,
   Theme,
   Tooltip,
   Typography,
+  withStyles,
+  WithStyles,
 } from '@material-ui/core';
-import Cleave from 'cleave.js/react';
 import * as React from 'react';
 
 interface Props {
@@ -25,6 +26,7 @@ interface Props {
   thousandSeparator?: string;
   decimalSeparator?: string;
   isNumericString?: boolean;
+  decimalPlaces?: number;
   onFinished?: (value: number) => void;
   onChange?: (value: number) => void;
   autoFocus?: boolean;
@@ -32,9 +34,48 @@ interface Props {
   negativeValue?: boolean; // allow negative values (default: false)
 }
 
-function NumberField(props: Props) {
-  const classes = useStyles();
+const NumberFieldStyles = (theme: Theme) =>
+  createStyles({
+    tooltip: () => ({
+      backgroundColor: '#FF0000',
+      color: '#ffffff',
+    }),
 
+    input: () => ({
+      color: theme.typography.subtitle1.color,
+      fontSize: theme.typography.subtitle1.fontSize,
+      fontWeight: theme.typography.subtitle1.fontWeight,
+      fontFamily: theme.typography.subtitle1.fontFamily,
+      lineHeight: theme.typography.subtitle1.lineHeight,
+      textAlign: 'right',
+      paddingLeft: '10px',
+      width: '100%',
+    }),
+
+    underline: () => ({
+      '&:hover:before': {
+        backgroundColor: '#d3d3d3' + '!important',
+        height: 2,
+      },
+
+      '&:before': {
+        backgroundColor: '#d3d3d3',
+        height: 2,
+      },
+      '&:after': {
+        backgroundColor: '#d3d3d3',
+        height: 2,
+      },
+    }),
+    endAdornment: () => ({
+      padding: '4px 5px 0 0',
+      marginBottom: 5,
+    }),
+  });
+
+export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
+  props: Props & WithStyles<typeof NumberFieldStyles>
+) {
   const [thousandSeparator, setThousandSeparator] = React.useState<string>('.');
   const [decimalSeparator, setDecimalSeparator] = React.useState<string>(',');
   const [isNumericString, setIsNumericString] = React.useState<boolean>(true);
@@ -47,19 +88,11 @@ function NumberField(props: Props) {
     return;
   });
   const [value, setValue] = React.useState<string>('');
-  const [focus, setFocus] = React.useState(false);
+  const { classes } = props;
+  const inputEl = React.useRef(null);
 
   // Component will Receive Props
   React.useEffect(() => {
-    let newValue: string = props.value ? props.value.toString() : value;
-
-    newValue = newValue.replace(
-      /\./,
-      decimalSeparator ? decimalSeparator : ','
-    );
-
-    setValue(newValue);
-    setFocus(props.autoFocus ?? focus);
     setThousandSeparator(props.thousandSeparator ?? thousandSeparator);
     setDecimalSeparator(props.decimalSeparator ?? decimalSeparator);
     setIsNumericString(props.isNumericString ?? isNumericString);
@@ -69,12 +102,21 @@ function NumberField(props: Props) {
     setCloseTooltip(props.closeTooltip ?? closeTooltip);
   }, []);
 
+  React.useEffect(() => {
+    let newValue: string = props.value ? props.value.toString() : value;
+
+    newValue = newValue.replace(
+      /\./,
+      decimalSeparator ? decimalSeparator : ','
+    );
+
+    setValue(newValue);
+  }, [props.value]);
+
   /**
    * select entire input if field is focused
    */
-  const handleFocus = (
-    event: React.FocusEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
+  function handleFocus(event: any) {
     if (isTooltipOpen) {
       closeTooltip();
     }
@@ -82,17 +124,15 @@ function NumberField(props: Props) {
     // https://stackoverflow.com/questions/49500255/warning-this-synthetic-event-is-reused-for-performance-reasons-happening-with
     event.persist();
     const { target } = event;
-
     target.select();
     setTimeout(() => target.select(), 20);
-    setFocus(true);
-  };
+  }
 
   /**
    * use default style, defined in styles, if no style is given for input and underline
    */
   const tooltipClassesStyle = () => {
-    const classes = useStyles();
+    const { classes } = props;
 
     if (props.tooltipClassesStyle) {
       return props.tooltipClassesStyle;
@@ -105,7 +145,7 @@ function NumberField(props: Props) {
    * use default style, defined in styles, if no style is given for input and underline
    */
   const inputClassesStyle = () => {
-    const classes = useStyles();
+    const { classes } = props;
 
     if (props.inputClassesStyle) {
       return props.inputClassesStyle;
@@ -124,18 +164,47 @@ function NumberField(props: Props) {
     ev: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
     const { onChange, maxValue } = props;
-    const value = ev.target.value;
-    const numValue = stringValueToNum(value);
-
+    const eventValue = ev.target.value;
+    const numValue = stringValueToNum(eventValue);
+    const convertedValue = valueToString(eventValue);
     if (maxValue && numValue && numValue > maxValue) {
       onFinished();
       return;
     }
-
-    if (onChange) {
+    if (onChange && convertedValue) {
       onChange(numValue !== undefined ? numValue : 0);
     }
-    setValue(value);
+    if (convertedValue !== 'NaN' && convertedValue !== '') {
+      setValue(convertedValue ? convertedValue : value);
+    } else {
+      setValue('');
+    }
+  };
+
+  const valueToString = (value: string) => {
+    if (value) {
+      let convertedValue: string = value;
+      if (value.indexOf(',') > 0) {
+        const splittString = value.split(',');
+
+        if (!isNaN(parseInt(splittString[0])) && splittString[1].length === 0) {
+          return value;
+        } else if (
+          props.decimalPlaces
+            ? splittString[1].length > props.decimalPlaces
+            : splittString[1].length > 2
+        ) {
+          return;
+        }
+      } else {
+        const numValue = stringValueToNum(value);
+        convertedValue = Intl.NumberFormat('de-DE', {
+          style: 'decimal',
+        }).format(numValue ? numValue : parseInt(value));
+      }
+      return convertedValue;
+    }
+    return value;
   };
 
   const onFinished = () => {
@@ -144,6 +213,7 @@ function NumberField(props: Props) {
     if (!onFinished) {
       return;
     }
+
     const numValue = stringValueToNum(value);
 
     if (numValue !== undefined) {
@@ -153,7 +223,6 @@ function NumberField(props: Props) {
       onFinished(0);
       setValue('');
     }
-    setFocus(false);
   };
 
   const stringValueToNum = (value: string): number | undefined => {
@@ -182,25 +251,6 @@ function NumberField(props: Props) {
     }
   };
 
-  const maskedTextField = (input: any) => {
-    let { options, inputRef, ...other } = input;
-    const { decimalSeparator, thousandSeparator } = props;
-
-    return (
-      <Cleave
-        {...other}
-        ref={(ref: any) => {
-          inputRef = ref;
-        }}
-        options={{
-          numeral: true,
-          numeralDecimalMark: decimalSeparator ? decimalSeparator : ',',
-          delimiter: thousandSeparator ? thousandSeparator : '.',
-        }}
-      />
-    );
-  };
-
   return (
     <FormControl className={props.className} style={props.style}>
       <Tooltip
@@ -211,8 +261,9 @@ function NumberField(props: Props) {
       >
         <ClickAwayListener onClickAway={onFinished}>
           <Input
+            ref={inputEl}
             data-cy='numberField'
-            autoFocus={focus}
+            autoFocus={props.autoFocus}
             onBlur={() => onFinished()}
             onKeyPress={onKeyPress}
             onKeyDown={(ev) => {
@@ -230,54 +281,15 @@ function NumberField(props: Props) {
                 </Typography>
               </InputAdornment>
             }
-            onFocus={handleFocus}
+            onFocusCapture={handleFocus}
             disableUnderline={true}
             type={'text'}
-            inputComponent={maskedTextField}
             inputProps={{ inputMode: 'decimal' }}
           />
         </ClickAwayListener>
       </Tooltip>
     </FormControl>
   );
-}
+});
 
-const useStyles = makeStyles((theme: Theme) => ({
-  tooltip: () => ({
-    backgroundColor: '#FF0000',
-    color: '#ffffff',
-  }),
-
-  input: () => ({
-    color: theme.typography.subtitle1.color,
-    fontSize: theme.typography.subtitle1.fontSize,
-    fontWeight: theme.typography.subtitle1.fontWeight,
-    fontFamily: theme.typography.subtitle1.fontFamily,
-    lineHeight: theme.typography.subtitle1.lineHeight,
-    textAlign: 'right',
-    paddingLeft: '10px',
-    width: '100%',
-  }),
-
-  underline: () => ({
-    '&:hover:before': {
-      backgroundColor: '#d3d3d3' + '!important',
-      height: 2,
-    },
-
-    '&:before': {
-      backgroundColor: '#d3d3d3',
-      height: 2,
-    },
-    '&:after': {
-      backgroundColor: '#d3d3d3',
-      height: 2,
-    },
-  }),
-  endAdornment: () => ({
-    padding: '4px 5px 0 0',
-    marginBottom: 5,
-  }),
-}));
-
-export default NumberField;
+export default withStyles(NumberFieldStyles)(NumberField);

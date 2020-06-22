@@ -1,20 +1,23 @@
 import { Paper } from '@material-ui/core';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { default as NewNumberField } from '../mui-components/NumberField';
+import { NumberField } from '../mui-components/NumberField';
 import RadioCalcRows from '../mui-components/RadioCalcRows';
-import CalculationRowWithProps from './CalculationRowWithProps';
+import { CalculationRowWithProps } from './CalculationRowWithProps';
 import { withTheme } from './index.stories';
 
 storiesOf('CalculationRow', module)
   .add('enabled with €', () => {
+    const [value, setValue] = React.useState(10000);
+
     return withTheme(
       <Paper style={{ margin: 20, maxWidth: 500 }}>
         <CalculationRowWithProps
           editable
           label='Eigenkapital'
           units={['€']}
-          value={100000}
+          value={value}
+          onChange={(v) => setValue(v)}
         />
         <CalculationRowWithProps
           maxValue={6000}
@@ -146,13 +149,13 @@ storiesOf('CalculationRow', module)
     );
   })
   .add('newNumberInput', () => {
-    const [value, setValue] = React.useState(1000);
+    // const [value, setValue] = React.useState(1000);
     return withTheme(
       <Paper style={{ margin: 20, maxWidth: 500 }}>
-        <NewNumberField
-          value={value}
+        <NumberField
+          value={1000}
           onChange={(value: number) => {
-            setValue(value), console.log('onChangeValue: ' + value);
+            console.log(value);
           }}
         />
       </Paper>
