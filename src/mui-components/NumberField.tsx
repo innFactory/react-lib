@@ -9,8 +9,8 @@ import {
   Typography,
   withStyles,
   WithStyles,
-} from "@material-ui/core";
-import * as React from "react";
+} from '@material-ui/core';
+import * as React from 'react';
 
 interface Props {
   maxValue?: number | null;
@@ -37,8 +37,8 @@ interface Props {
 const NumberFieldStyles = (theme: Theme) =>
   createStyles({
     tooltip: () => ({
-      backgroundColor: "#FF0000",
-      color: "#ffffff",
+      backgroundColor: '#FF0000',
+      color: '#ffffff',
     }),
 
     input: () => ({
@@ -47,47 +47,47 @@ const NumberFieldStyles = (theme: Theme) =>
       fontWeight: theme.typography.subtitle1.fontWeight,
       fontFamily: theme.typography.subtitle1.fontFamily,
       lineHeight: theme.typography.subtitle1.lineHeight,
-      textAlign: "right",
-      paddingLeft: "10px",
-      width: "100%",
+      textAlign: 'right',
+      paddingLeft: '10px',
+      width: '100%',
     }),
 
     underline: () => ({
-      "&:hover:before": {
-        backgroundColor: "#d3d3d3" + "!important",
+      '&:hover:before': {
+        backgroundColor: '#d3d3d3' + '!important',
         height: 2,
       },
 
-      "&:before": {
-        backgroundColor: "#d3d3d3",
+      '&:before': {
+        backgroundColor: '#d3d3d3',
         height: 2,
       },
-      "&:after": {
-        backgroundColor: "#d3d3d3",
+      '&:after': {
+        backgroundColor: '#d3d3d3',
         height: 2,
       },
     }),
     endAdornment: () => ({
-      padding: "4px 5px 0 0",
+      padding: '4px 5px 0 0',
       marginBottom: 5,
     }),
   });
 
 export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
-  props: Props & WithStyles<typeof NumberFieldStyles>,
+  props: Props & WithStyles<typeof NumberFieldStyles>
 ) {
-  const [thousandSeparator, setThousandSeparator] = React.useState<string>(".");
-  const [decimalSeparator, setDecimalSeparator] = React.useState<string>(",");
+  const [thousandSeparator, setThousandSeparator] = React.useState<string>('.');
+  const [decimalSeparator, setDecimalSeparator] = React.useState<string>(',');
   const [isNumericString, setIsNumericString] = React.useState<boolean>(true);
   const [isTooltipOpen, setIsTooltipOpen] = React.useState<boolean>(false);
   const [tooltipPlacement, setTooltipPlacement] = React.useState<any>(
-    undefined,
+    undefined
   );
-  const [tooltipTitle, setTooltipTitle] = React.useState<string>("");
+  const [tooltipTitle, setTooltipTitle] = React.useState<string>('');
   const [closeTooltip, setCloseTooltip] = React.useState<any>(() => {
     return;
   });
-  const [value, setValue] = React.useState<string>("");
+  const [value, setValue] = React.useState<string>('');
   const { classes } = props;
   const inputEl = React.useRef(null);
 
@@ -107,7 +107,7 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
 
     newValue = newValue.replace(
       /\./,
-      decimalSeparator ? decimalSeparator : ",",
+      decimalSeparator ? decimalSeparator : ','
     );
 
     setValue(newValue);
@@ -155,13 +155,13 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
   };
 
   const onKeyPress = (ev: React.KeyboardEvent<HTMLDivElement>) => {
-    if (ev.key === "Enter") {
+    if (ev.key === 'Enter') {
       onFinished();
     }
   };
 
   const onChange = (
-    ev: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+    ev: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
     const { onChange, maxValue } = props;
     const eventValue = ev.target.value;
@@ -174,19 +174,18 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
     if (onChange && convertedValue) {
       onChange(numValue !== undefined ? numValue : 0);
     }
-    console.log(convertedValue);
-    if (convertedValue !== "NaN" && convertedValue !== "") {
+    if (convertedValue !== 'NaN' && convertedValue !== '') {
       setValue(convertedValue ? convertedValue : value);
     } else {
-      setValue("");
+      setValue('');
     }
   };
 
   const valueToString = (value: string) => {
     if (value) {
       let convertedValue: string = value;
-      if (value.indexOf(",") > 0) {
-        const splittString = value.split(",");
+      if (value.indexOf(',') > 0) {
+        const splittString = value.split(',');
 
         if (!isNaN(parseInt(splittString[0])) && splittString[1].length === 0) {
           return value;
@@ -199,8 +198,8 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
         }
       } else {
         const numValue = stringValueToNum(value);
-        convertedValue = Intl.NumberFormat("de-DE", {
-          style: "decimal",
+        convertedValue = Intl.NumberFormat('de-DE', {
+          style: 'decimal',
         }).format(numValue ? numValue : parseInt(value));
       }
       return convertedValue;
@@ -219,10 +218,10 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
 
     if (numValue !== undefined) {
       onFinished(numValue);
-      setValue(numValue + "");
+      setValue(numValue + '');
     } else {
       onFinished(0);
-      setValue("");
+      setValue('');
     }
   };
 
@@ -230,10 +229,10 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
     const { negativeValue, thousandSeparator } = props;
 
     try {
-      const thousandReg = new RegExp(thousandSeparator ?? /\./, "gm");
-      value = value.replace(thousandReg, "");
-      const decimalReg = new RegExp(decimalSeparator ?? ",", "g");
-      value = value.replace(decimalReg, ".");
+      const thousandReg = new RegExp(thousandSeparator ?? /\./, 'gm');
+      value = value.replace(thousandReg, '');
+      const decimalReg = new RegExp(decimalSeparator ?? ',', 'g');
+      value = value.replace(decimalReg, '.');
       const num = Number.parseFloat(value);
 
       if (isNaN(num)) {
@@ -263,30 +262,29 @@ export const NumberField = withStyles(NumberFieldStyles)(function NumberField(
         <ClickAwayListener onClickAway={onFinished}>
           <Input
             ref={inputEl}
-            data-cy="numberField"
+            data-cy='numberField'
             autoFocus={props.autoFocus}
             onBlur={() => onFinished()}
             onKeyPress={onKeyPress}
             onKeyDown={(ev) => {
-              if (ev.key === "ArrowDown" || ev.key === "ArrowUp") {
+              if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
                 onFinished();
               }
             }}
             classes={inputClassesStyle()}
-            value={value ? value : ""}
+            value={value ? value : ''}
             onChange={onChange}
-            endAdornment={<InputAdornment
-              className={classes.endAdornment}
-              position={"end"}
-            >
-              <Typography variant="subtitle1">
-                {props.endAdornment}
-              </Typography>
-            </InputAdornment>}
+            endAdornment={
+              <InputAdornment className={classes.endAdornment} position={'end'}>
+                <Typography variant='subtitle1'>
+                  {props.endAdornment}
+                </Typography>
+              </InputAdornment>
+            }
             onFocusCapture={handleFocus}
             disableUnderline={true}
-            type={"text"}
-            inputProps={{ inputMode: "decimal" }}
+            type={'text'}
+            inputProps={{ inputMode: 'decimal' }}
           />
         </ClickAwayListener>
       </Tooltip>
