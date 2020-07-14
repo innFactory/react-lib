@@ -104,7 +104,6 @@ const CalculationRowStyles = (theme: Theme) =>
       paddingTop: 6,
       paddingBottom: 7,
       paddingRight: 5,
-      width: 150,
     }),
 
     numberField: () => ({
@@ -441,7 +440,7 @@ export const CalculationRow = withStyles(CalculationRowStyles)(
               {renderInfoIcon()}
             </div>
           )}
-          {props.value !== undefined ? renderNumberField() : <></>}
+          {renderNumberField()}
         </div>
         {renderUnitSwitch()}
         {isMobile && renderInfoContainer()}
